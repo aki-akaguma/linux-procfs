@@ -1,0 +1,50 @@
+Name:	gpg-agent
+State:	S (sleeping)
+Tgid:	2921
+Ngid:	0
+Pid:	2921
+PPid:	2063
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	64
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	2921
+NSpid:	2921
+NSpgid:	2921
+NSsid:	2921
+VmPeak:	  233372 kB
+VmSize:	  167836 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	     908 kB
+VmRSS:	     152 kB
+VmData:	  147712 kB
+VmStk:	     132 kB
+VmExe:	     332 kB
+VmLib:	    3052 kB
+VmPTE:	      68 kB
+VmPMD:	      12 kB
+VmSwap:	     116 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180004a03
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	239604
+nonvoluntary_ctxt_switches:	2301

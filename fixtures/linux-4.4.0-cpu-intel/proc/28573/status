@@ -1,0 +1,50 @@
+Name:	xfreerdp
+State:	S (sleeping)
+Tgid:	28573
+Ngid:	0
+Pid:	28573
+PPid:	3114
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	64
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	28573
+NSpid:	28573
+NSpgid:	2974
+NSsid:	2974
+VmPeak:	 1059360 kB
+VmSize:	  993824 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   26068 kB
+VmRSS:	   23164 kB
+VmData:	  609112 kB
+VmStk:	     132 kB
+VmExe:	     140 kB
+VmLib:	   52444 kB
+VmPTE:	     620 kB
+VmPMD:	      16 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	13
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	00000001d7b86eff
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	37
+nonvoluntary_ctxt_switches:	25

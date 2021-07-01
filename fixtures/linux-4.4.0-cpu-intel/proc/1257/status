@@ -1,0 +1,50 @@
+Name:	acpid
+State:	S (sleeping)
+Tgid:	1257
+Ngid:	0
+Pid:	1257
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	1257
+NSpid:	1257
+NSpgid:	1257
+NSsid:	1257
+VmPeak:	    4460 kB
+VmSize:	    4396 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	     716 kB
+VmRSS:	     404 kB
+VmData:	     188 kB
+VmStk:	     132 kB
+VmExe:	      44 kB
+VmLib:	    1944 kB
+VmPTE:	      36 kB
+VmPMD:	      12 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000000004007
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	156323
+nonvoluntary_ctxt_switches:	2114

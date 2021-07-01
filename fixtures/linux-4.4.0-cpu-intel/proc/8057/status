@@ -1,0 +1,50 @@
+Name:	bash
+State:	S (sleeping)
+Tgid:	8057
+Ngid:	0
+Pid:	8057
+PPid:	8033
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	8057
+NSpid:	8057
+NSpgid:	8023
+NSsid:	25618
+VmPeak:	   13768 kB
+VmSize:	   13768 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    3084 kB
+VmRSS:	    2876 kB
+VmData:	     236 kB
+VmStk:	     132 kB
+VmExe:	     976 kB
+VmLib:	    2104 kB
+VmPTE:	      48 kB
+VmPMD:	      12 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000010000
+SigIgn:	0000000000000004
+SigCgt:	0000000000010002
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	10
+nonvoluntary_ctxt_switches:	13

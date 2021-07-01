@@ -1,0 +1,50 @@
+Name:	whoopsie
+State:	S (sleeping)
+Tgid:	2212
+Ngid:	0
+Pid:	2212
+PPid:	1
+TracerPid:	0
+Uid:	126	126	126	126
+Gid:	136	136	136	136
+FDSize:	128
+Groups:	136 
+NStgid:	2212
+NSpid:	2212
+NSpgid:	2212
+NSsid:	2212
+VmPeak:	  374292 kB
+VmSize:	  374096 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   12424 kB
+VmRSS:	    3240 kB
+VmData:	  222224 kB
+VmStk:	     132 kB
+VmExe:	      52 kB
+VmLib:	   21376 kB
+VmPTE:	     324 kB
+VmPMD:	      12 kB
+VmSwap:	    1240 kB
+HugetlbPages:	       0 kB
+Threads:	3
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180004002
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	237
+nonvoluntary_ctxt_switches:	29

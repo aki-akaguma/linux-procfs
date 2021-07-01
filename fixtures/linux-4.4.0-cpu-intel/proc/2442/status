@@ -1,0 +1,50 @@
+Name:	tor
+State:	S (sleeping)
+Tgid:	2442
+Ngid:	0
+Pid:	2442
+PPid:	1
+TracerPid:	0
+Uid:	115	115	115	115
+Gid:	121	121	121	121
+FDSize:	128
+Groups:	121 
+NStgid:	2442
+NSpid:	2442
+NSpgid:	2442
+NSsid:	2442
+VmPeak:	  109068 kB
+VmSize:	  108872 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   50980 kB
+VmRSS:	   38856 kB
+VmData:	   50088 kB
+VmStk:	     132 kB
+VmExe:	    2868 kB
+VmLib:	    8672 kB
+VmPTE:	     240 kB
+VmPMD:	      16 kB
+VmSwap:	    9108 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000000000
+SigCgt:	00000001d1015ecb
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000000004c4
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	5705649
+nonvoluntary_ctxt_switches:	104641

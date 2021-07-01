@@ -1,0 +1,50 @@
+Name:	upowerd
+State:	S (sleeping)
+Tgid:	3132
+Ngid:	0
+Pid:	3132
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	128
+Groups:	
+NStgid:	3132
+NSpid:	3132
+NSpgid:	3132
+NSsid:	3132
+VmPeak:	  344444 kB
+VmSize:	  344364 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    9640 kB
+VmRSS:	    3508 kB
+VmData:	  230472 kB
+VmStk:	     132 kB
+VmExe:	     212 kB
+VmLib:	   41372 kB
+VmPTE:	     204 kB
+VmPMD:	      12 kB
+VmSwap:	     512 kB
+HugetlbPages:	       0 kB
+Threads:	3
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180000002
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	127
+nonvoluntary_ctxt_switches:	337

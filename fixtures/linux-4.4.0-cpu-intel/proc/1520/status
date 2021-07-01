@@ -1,0 +1,50 @@
+Name:	Web Content
+State:	S (sleeping)
+Tgid:	1520
+Ngid:	0
+Pid:	1520
+PPid:	1455
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	128
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	1520
+NSpid:	1520
+NSpgid:	2974
+NSsid:	2974
+VmPeak:	 2365128 kB
+VmSize:	 2254520 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	  684448 kB
+VmRSS:	  463200 kB
+VmData:	 1695808 kB
+VmStk:	     160 kB
+VmExe:	     188 kB
+VmLib:	  165500 kB
+VmPTE:	    2284 kB
+VmPMD:	      20 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	27
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000011002
+SigCgt:	0000000fc20004f8
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	2
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	1947065
+nonvoluntary_ctxt_switches:	1176657

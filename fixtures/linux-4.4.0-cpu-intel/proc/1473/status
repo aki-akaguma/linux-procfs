@@ -1,0 +1,50 @@
+Name:	ModemManager
+State:	S (sleeping)
+Tgid:	1473
+Ngid:	0
+Pid:	1473
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	1473
+NSpid:	1473
+NSpgid:	1473
+NSsid:	1473
+VmPeak:	  341892 kB
+VmSize:	  339884 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    8940 kB
+VmRSS:	    3376 kB
+VmData:	  222416 kB
+VmStk:	     132 kB
+VmExe:	    1132 kB
+VmLib:	   11312 kB
+VmPTE:	     276 kB
+VmPMD:	      16 kB
+VmSwap:	     332 kB
+HugetlbPages:	       0 kB
+Threads:	3
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180004002
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	181
+nonvoluntary_ctxt_switches:	73

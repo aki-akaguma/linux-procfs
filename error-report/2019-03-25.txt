@@ -1,0 +1,57 @@
+No such process (os error 3): `/proc/28873/stat`
+No such process (os error 3): `/proc/30173/statm`
+No such process (os error 3): `/proc/26336/stat`
+
+Proc { pid: 10419, comm: "kworker/dying", state: 88, ppid: 0, pgrp: -1, utime: 0, stime: 0, cutime: 0, cstime: 0, nice: 0, num_threads: 0, starttime: 85028802, vsize: 0, rss: 0, delayacct_blkio_ticks: 0, size: 0, resident: 0, share: 0, text: 0, lib: 0, data: 0, ruid: 0, euid: 0, suid: 0, fuid: 0, rgid: 0, egid: 0, sgid: 0, fgid: 0, vm_size: 0, vm_lock: 0, vm_rss: 0, vm_data: 0, vm_stk: 0, vm_exe: 0, vm_lib: 0, vm_pte: 0, vm_swap: 0, cmdline: "", diff_stime: 0, diff_utime: 0, diff_cstime: 0, diff_cutime: 0, diff_delayacct_blkio_ticks: 0 }
+
+Proc { pid: 10419, comm: "kworker/2:1", state: 83, ppid: 2, pgrp: 0, utime: 7, stime: 24, cutime: 0, cstime: 0, nice: 0, num_threads: 1, starttime: 85028802, vsize: 0, rss: 0, delayacct_blkio_ticks: 0, size: 0, resident: 0, share: 0, text: 0, lib: 0, data: 0, ruid: 0, euid: 0, suid: 0, fuid: 0, rgid: 0, egid: 0, sgid: 0, fgid: 0, vm_size: 0, vm_lock: 0, vm_rss: 0, vm_data: 0, vm_stk: 0, vm_exe: 0, vm_lib: 0, vm_pte: 0, vm_swap: 0, cmdline: "", diff_stime: 0, diff_utime: 0, diff_cstime: 0, diff_cutime: 0, diff_delayacct_blkio_ticks: 0 }
+
+thread 'main' panicked at 'assertion failed: if self.stime >= other.stime {
+    true
+} else { eprintln!("{:?}" , self); eprintln!("{:?}" , other); false }', /home/hcc/.cargo/git/checkouts/hmon-lib-8573b739a8a8304c/3d17e68/src/system/procs.rs:342:9
+
+stack backtrace:
+   0: std::sys::unix::backtrace::tracing::imp::unwind_backtrace
+             at libstd/sys/unix/backtrace/tracing/gcc_s.rs:49
+   1: std::sys_common::backtrace::print
+             at libstd/sys_common/backtrace.rs:71
+             at libstd/sys_common/backtrace.rs:59
+   2: std::panicking::default_hook::{{closure}}
+             at libstd/panicking.rs:211
+   3: std::panicking::default_hook
+             at libstd/panicking.rs:227
+   4: std::panicking::rust_panic_with_hook
+             at libstd/panicking.rs:511
+   5: std::panicking::begin_panic
+             at /checkout/src/libstd/panicking.rs:445
+   6: hmon_lib::system::procs::Proc::diff
+             at ./.cargo/git/checkouts/hmon-lib-8573b739a8a8304c/3d17e68/src/system/procs.rs:342
+   7: hmon_lib::system::procs::Procs::diff
+             at ./.cargo/git/checkouts/hmon-lib-8573b739a8a8304c/3d17e68/src/system/procs.rs:56
+   8: hmon_lib::system::Snapshot::update
+             at ./.cargo/git/checkouts/hmon-lib-8573b739a8a8304c/3d17e68/src/system/mod.rs:82
+             at ./.cargo/git/checkouts/hmon-lib-8573b739a8a8304c/3d17e68/src/system/mod.rs:108
+   9: hmon_rs::do_curses
+             at src/main.rs:93
+  10: hmon_rs::main
+             at src/main.rs:77
+  11: std::rt::lang_start::{{closure}}
+             at /checkout/src/libstd/rt.rs:74
+  12: std::panicking::try::do_call
+             at libstd/rt.rs:59
+             at libstd/panicking.rs:310
+  13: __rust_maybe_catch_panic
+             at libpanic_unwind/lib.rs:105
+  14: std::rt::lang_start_internal
+             at libstd/panicking.rs:289
+             at libstd/panic.rs:392
+             at libstd/rt.rs:58
+  15: main
+  16: __libc_start_main
+  17: _start
+
+No such process (os error 3): `/proc/11693/statm`
+すみません、もう一度試してください。
+すみません、もう一度試してください。
+memory allocation of 2759964528966863872 bytes failedNo such process (os error 3): `/proc/18773/statm`
+memory allocation of 2774817026433170944 bytes failed

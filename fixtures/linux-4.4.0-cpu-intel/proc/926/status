@@ -1,0 +1,50 @@
+Name:	console-kit-dae
+State:	S (sleeping)
+Tgid:	926
+Ngid:	0
+Pid:	926
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	128
+Groups:	
+NStgid:	926
+NSpid:	926
+NSpgid:	926
+NSsid:	926
+VmPeak:	 2100116 kB
+VmSize:	 2100116 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    6292 kB
+VmRSS:	    3168 kB
+VmData:	 2052756 kB
+VmStk:	     132 kB
+VmExe:	     136 kB
+VmLib:	    7948 kB
+VmPTE:	     244 kB
+VmPMD:	      20 kB
+VmSwap:	     960 kB
+HugetlbPages:	       0 kB
+Threads:	65
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180000200
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	424
+nonvoluntary_ctxt_switches:	96

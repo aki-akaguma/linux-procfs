@@ -1,0 +1,50 @@
+Name:	systemd
+State:	S (sleeping)
+Tgid:	1400
+Ngid:	0
+Pid:	1400
+PPid:	1330
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	1400	1
+NSpid:	1400	1
+NSpgid:	1400	1
+NSsid:	1400	1
+VmPeak:	   37176 kB
+VmSize:	   37132 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    4968 kB
+VmRSS:	    2312 kB
+VmData:	     856 kB
+VmStk:	     132 kB
+VmExe:	    1392 kB
+VmLib:	    3684 kB
+VmPTE:	      88 kB
+VmPMD:	      12 kB
+VmSwap:	      32 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31528
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	7be3c0fe28014a03
+SigIgn:	0000000000001000
+SigCgt:	00000001800004ec
+CapInh:	0000000000000000
+CapPrm:	0000003cfdfcffff
+CapEff:	0000003cfdfcffff
+CapBnd:	0000003cfdfcffff
+CapAmb:	0000000000000000
+Seccomp:	2
+
+Speculation_Store_Bypass:	not vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	2086
+nonvoluntary_ctxt_switches:	45

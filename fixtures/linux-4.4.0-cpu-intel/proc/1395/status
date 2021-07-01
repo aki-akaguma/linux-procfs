@@ -1,0 +1,36 @@
+Name:	irq/21-eth0
+State:	S (sleeping)
+Tgid:	1395
+Ngid:	0
+Pid:	1395
+PPid:	2
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	1395
+NSpid:	1395
+NSpgid:	0
+NSsid:	0
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	ffffffffffffffff
+SigCgt:	0000000000000000
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	c
+Cpus_allowed_list:	2-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	49252976
+nonvoluntary_ctxt_switches:	1820

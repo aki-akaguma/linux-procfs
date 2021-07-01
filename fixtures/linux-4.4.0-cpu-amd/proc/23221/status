@@ -1,0 +1,50 @@
+Name:	hmon-rs
+State:	S (sleeping)
+Tgid:	23221
+Ngid:	0
+Pid:	23221
+PPid:	23220
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	0 
+NStgid:	23221
+NSpid:	23221
+NSpgid:	23220
+NSsid:	2664
+VmPeak:	   36676 kB
+VmSize:	   36416 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    7044 kB
+VmRSS:	    5452 kB
+VmData:	    2496 kB
+VmStk:	     132 kB
+VmExe:	    1316 kB
+VmLib:	    3760 kB
+VmPTE:	      92 kB
+VmPMD:	      12 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31528
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000188084442
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	not vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	14494
+nonvoluntary_ctxt_switches:	26852

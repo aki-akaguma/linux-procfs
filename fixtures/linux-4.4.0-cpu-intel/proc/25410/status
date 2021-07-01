@@ -1,0 +1,50 @@
+Name:	chromium-browse
+State:	S (sleeping)
+Tgid:	25410
+Ngid:	0
+Pid:	25410
+PPid:	25334
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	25410	16	1
+NSpid:	25410	16	1
+NSpgid:	2974	0	0
+NSsid:	2974	0	0
+VmPeak:	 2259036 kB
+VmSize:	 2141888 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	  411056 kB
+VmRSS:	  288832 kB
+VmData:	 1701028 kB
+VmStk:	     132 kB
+VmExe:	  142792 kB
+VmLib:	   54796 kB
+VmPTE:	    2460 kB
+VmPMD:	    1300 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	12
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001002
+SigCgt:	00000001c0014eed
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	2
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	81768
+nonvoluntary_ctxt_switches:	177305

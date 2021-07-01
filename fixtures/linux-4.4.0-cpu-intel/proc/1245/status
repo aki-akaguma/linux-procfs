@@ -1,0 +1,50 @@
+Name:	accounts-daemon
+State:	S (sleeping)
+Tgid:	1245
+Ngid:	0
+Pid:	1245
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	1245
+NSpid:	1245
+NSpgid:	1245
+NSsid:	1245
+VmPeak:	  277604 kB
+VmSize:	  273104 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    6148 kB
+VmRSS:	    3208 kB
+VmData:	  221868 kB
+VmStk:	     132 kB
+VmExe:	     144 kB
+VmLib:	    7712 kB
+VmPTE:	     148 kB
+VmPMD:	      12 kB
+VmSwap:	     316 kB
+HugetlbPages:	       0 kB
+Threads:	3
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180004002
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	336
+nonvoluntary_ctxt_switches:	220

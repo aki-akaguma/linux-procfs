@@ -1,0 +1,50 @@
+Name:	sudo
+State:	S (sleeping)
+Tgid:	14494
+Ngid:	0
+Pid:	14494
+PPid:	842
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 20 24 29 46 103 104 115 120 121 122 125 1000 
+NStgid:	14494
+NSpid:	14494
+NSpgid:	14494
+NSsid:	842
+VmPeak:	  105536 kB
+VmSize:	  105340 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    5328 kB
+VmRSS:	    5328 kB
+VmData:	     700 kB
+VmStk:	     132 kB
+VmExe:	     128 kB
+VmLib:	    7816 kB
+VmPTE:	     220 kB
+VmPMD:	      12 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000000000
+SigCgt:	00000001800b7a07
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	4
+nonvoluntary_ctxt_switches:	13

@@ -1,0 +1,55 @@
+Name:	log_file_daemon
+Umask:	0027
+State:	S (sleeping)
+Tgid:	1572
+Ngid:	0
+Pid:	1572
+PPid:	1552
+TracerPid:	0
+Uid:	13	13	13	13
+Gid:	13	13	13	13
+FDSize:	64
+Groups:	13 
+NStgid:	1572	105
+NSpid:	1572	105
+NSpgid:	1550	101
+NSsid:	1550	101
+VmPeak:	    5884 kB
+VmSize:	    5884 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    1524 kB
+VmRSS:	    1524 kB
+RssAnon:	     152 kB
+RssFile:	    1372 kB
+RssShmem:	       0 kB
+VmData:	     236 kB
+VmStk:	     132 kB
+VmExe:	       8 kB
+VmLib:	    3344 kB
+VmPTE:	      44 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	1
+SigQ:	0/3583
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000000000000
+CapInh:	0000000000000000
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	0000003cfdfcffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	2
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	3
+Cpus_allowed_list:	0-1
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	908
+nonvoluntary_ctxt_switches:	35

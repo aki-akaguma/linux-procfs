@@ -1,0 +1,50 @@
+Name:	smbd
+State:	S (sleeping)
+Tgid:	2083
+Ngid:	0
+Pid:	2083
+PPid:	2003
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	
+NStgid:	2083
+NSpid:	2083
+NSpgid:	2003
+NSsid:	2003
+VmPeak:	  334012 kB
+VmSize:	  333888 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	    8644 kB
+VmRSS:	    3552 kB
+VmData:	    1508 kB
+VmStk:	     132 kB
+VmExe:	      64 kB
+VmLib:	   33000 kB
+VmPTE:	     636 kB
+VmPMD:	      12 kB
+VmSwap:	    1940 kB
+HugetlbPages:	       0 kB
+Threads:	1
+SigQ:	0/31767
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000001880
+SigIgn:	0000000000000000
+SigCgt:	0000000180014461
+CapInh:	0000000000000000
+CapPrm:	0000003fffffffff
+CapEff:	0000003fffffffff
+CapBnd:	0000003fffffffff
+CapAmb:	0000000000000000
+Seccomp:	0
+
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	f
+Cpus_allowed_list:	0-3
+Mems_allowed:	00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	13452
+nonvoluntary_ctxt_switches:	8036

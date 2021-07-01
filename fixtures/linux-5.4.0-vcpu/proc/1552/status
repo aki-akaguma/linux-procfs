@@ -1,0 +1,55 @@
+Name:	squid
+Umask:	0027
+State:	S (sleeping)
+Tgid:	1552
+Ngid:	0
+Pid:	1552
+PPid:	1550
+TracerPid:	0
+Uid:	13	13	0	13
+Gid:	13	13	13	13
+FDSize:	256
+Groups:	13 
+NStgid:	1552	103
+NSpid:	1552	103
+NSpgid:	1550	101
+NSsid:	1550	101
+VmPeak:	   74964 kB
+VmSize:	   74964 kB
+VmLck:	       0 kB
+VmPin:	       0 kB
+VmHWM:	   28648 kB
+VmRSS:	   28072 kB
+RssAnon:	   14944 kB
+RssFile:	   13128 kB
+RssShmem:	       0 kB
+VmData:	   20508 kB
+VmStk:	     132 kB
+VmExe:	    5760 kB
+VmLib:	    8292 kB
+VmPTE:	     140 kB
+VmSwap:	       0 kB
+HugetlbPages:	       0 kB
+CoreDumping:	0
+THP_enabled:	1
+Threads:	1
+SigQ:	0/3583
+SigPnd:	0000000000000000
+ShdPnd:	0000000000000000
+SigBlk:	0000000000000000
+SigIgn:	0000000000001000
+SigCgt:	0000000180114a03
+CapInh:	0000000000000000
+CapPrm:	0000003cfdfcffff
+CapEff:	0000000000000400
+CapBnd:	0000003cfdfcffff
+CapAmb:	0000000000000000
+NoNewPrivs:	0
+Seccomp:	2
+Speculation_Store_Bypass:	vulnerable
+Cpus_allowed:	3
+Cpus_allowed_list:	0-1
+Mems_allowed:	00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001
+Mems_allowed_list:	0
+voluntary_ctxt_switches:	180328
+nonvoluntary_ctxt_switches:	2528
