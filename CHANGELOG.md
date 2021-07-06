@@ -2,6 +2,12 @@ TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.3.7 (2021-07-07)
+=====
+
+* update depends: cfg-iif(0.2.1), memx(0.1.14), naive_opt(0.1.13)
+* modify .gitignore
+
 0.3.6 (2021-07-01)
 =====
 
