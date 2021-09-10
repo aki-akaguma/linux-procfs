@@ -2,6 +2,11 @@ TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.3.8 (2021-09-10)
+=====
+
+* update crates: memx(0.1.16), naive_opt(0.1.14), semver(1.0.4)
+
 0.3.7 (2021-07-07)
 =====
 
