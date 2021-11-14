@@ -2,6 +2,12 @@ TBD
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.3.10 (2021-11-14)
+=====
+
+* add more documents
+* update crates: cfg-iif(0.2.2), memx(0.1.18), naive_opt(0.1.16)
+
 0.3.9 (2021-09-11)
 =====
 

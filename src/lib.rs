@@ -3,6 +3,10 @@ The linux-procfs crate is the data snap library for the `/proc/` filesystem on t
 
 This crate reads from `/proc` filesystem, scanne it, stores the value into the struct and returns it. This scans and holds only the required values by specifying `feature`.
 
+# Feature
+
+- minimum supert rustc 1.47.0 (18bf6b4f0 2020-10-07)
+
 # Example
 
 ## Example 1: load average
