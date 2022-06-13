@@ -8,7 +8,7 @@ The linux-procfs is the data snap library for the `/proc/` filesystem on the lin
 keywords = ["procfs"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-edition = "2018"
+edition = "2021"
 repository = "https://github.com/aki-akaguma/linux-procfs"
 
 [dependencies]
