@@ -2,6 +2,9 @@ TBD: linux-procfs
 ===
 Unreleased changes. Release notes have not yet been written.
 
+0.3.11 (2022-06-13)
+=====
+
 * changes to edition 2021
 
 0.3.10 (2021-11-14)
