@@ -5,38 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased] *
+### Changed
+* reformat `CHANGELOG.md`
 
 
-## 0.3.12 (2023-01-05)
+## [0.3.12] (2023-01-05)
 ### Changed
 * update crates: naive_opt(0.1.23), memx(0.1.23)
 
-## 0.3.11 (2022-06-13)
+## [0.3.11] (2022-06-13)
 ### Changed
 * changes to edition 2021
 
-## 0.3.10 (2021-11-14)
+## [0.3.10] (2021-11-14)
 ### Added
 * add more documents
 
 ### Changed
 * update crates: cfg-iif(0.2.2), memx(0.1.18), naive_opt(0.1.16)
 
-## 0.3.9 (2021-09-11)
+## [0.3.9] (2021-09-11)
 ### Changed
 * update crates: memx(0.1.17)
 
-## 0.3.8 (2021-09-10)
+## [0.3.8] (2021-09-10)
 ### Changed
 * update crates: memx(0.1.16), naive_opt(0.1.14), semver(1.0.4)
 
-## 0.3.7 (2021-07-07)
+## [0.3.7] (2021-07-07)
 ### Changed
 * update depends: cfg-iif(0.2.1), memx(0.1.14), naive_opt(0.1.13)
 * modify .gitignore
 
-## 0.3.6 (2021-07-01)
+## [0.3.6] (2021-07-01)
 ### Changed
 * to github
 
@@ -98,3 +100,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.1.0 (2018-06-14)
 * first commit
+
+[Unreleased]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.12..HEAD
+[0.3.12]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.11..v0.3.12
+[0.3.11]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.10..v0.3.11
+[0.3.10]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.9..v0.3.10
+[0.3.9]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.8..v0.3.9
+[0.3.8]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.7..v0.3.8
+[0.3.7]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.6..v0.3.7
+[0.3.6]: https://github.com/aki-akaguma/linux-procfs/releases/tag/v0.3.6
