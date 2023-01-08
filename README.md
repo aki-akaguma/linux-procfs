@@ -1,5 +1,10 @@
 # linux-procfs
 
+[![crate][crate-image]][crate-link]
+[![Docs][docs-image]][docs-link]
+![Rust Version][rustc-image]
+![Apache2/MIT licensed][license-image]
+
 The linux-procfs crate is the data snap library for the `/proc/` filesystem on the linux os.
 
 This crate reads from `/proc` filesystem, scanne it, stores the value into the struct and returns it. This scans and holds only the required values by specifying `feature`.
@@ -44,3 +49,12 @@ This project is licensed under either of
    https://opensource.org/licenses/MIT)
 
 at your option.
+
+[//]: # (badges)
+
+[crate-image]: https://img.shields.io/crates/v/linux-procfs.svg
+[crate-link]: https://crates.io/crates/linux-procfs
+[docs-image]: https://docs.rs/linux-procfs/badge.svg
+[docs-link]: https://docs.rs/linux-procfs/
+[rustc-image]: https://img.shields.io/badge/rustc-1.56+-blue.svg
+[license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
