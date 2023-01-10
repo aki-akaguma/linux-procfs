@@ -5,13 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] *
+## [Unreleased]
+
+
+## [0.3.13] (2023-01-10)
 ### Added
 * badges into `README.tpl`
 
 ### Changed
 * reformat `CHANGELOG.md`
-
 
 ## [0.3.12] (2023-01-05)
 ### Changed
@@ -104,7 +106,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0 (2018-06-14)
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.12..HEAD
+[Unreleased]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.13..HEAD
+[0.3.13]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.12..v0.3.13
 [0.3.12]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.11..v0.3.12
 [0.3.11]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.10..v0.3.11
 [0.3.10]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.9..v0.3.10

@@ -1,6 +1,6 @@
 [package]
 name = "linux-procfs"
-version = "0.3.12"
+version = "0.3.13"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 description = """
 The linux-procfs is the data snap library for the `/proc/` filesystem on the linux os.
