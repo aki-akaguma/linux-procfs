@@ -4,6 +4,7 @@
 [![Docs][docs-image]][docs-link]
 ![Rust Version][rustc-image]
 ![Apache2/MIT licensed][license-image]
+[![Test][test-image]][test-link]
 
 The linux-procfs crate is the data snap library for the `/proc/` filesystem on the linux os.
 
@@ -11,7 +12,7 @@ This crate reads from `/proc` filesystem, scanne it, stores the value into the s
 
 ## Feature
 
-- minimum support rustc 1.56.1 (59eed8a2a 2021-11-01)
+- minimum support rustc 1.58.1 (db9d1b20b 2022-01-20)
 
 ## Example
 
@@ -58,3 +59,5 @@ at your option.
 [docs-link]: https://docs.rs/linux-procfs/
 [rustc-image]: https://img.shields.io/badge/rustc-1.56+-blue.svg
 [license-image]: https://img.shields.io/badge/license-Apache2.0/MIT-blue.svg
+[test-image]: https://github.com/aki-akaguma/linux-procfs/actions/workflows/test.yml/badge.svg
+[test-link]: https://github.com/aki-akaguma/linux-procfs/actions/workflows/test.yml

@@ -5,7 +5,7 @@ This crate reads from `/proc` filesystem, scanne it, stores the value into the s
 
 # Feature
 
-- minimum support rustc 1.56.1 (59eed8a2a 2021-11-01)
+- minimum support rustc 1.58.1 (db9d1b20b 2022-01-20)
 
 # Example
 
@@ -216,7 +216,7 @@ impl System {
             let entry = entry.unwrap();
             let os_name = entry.file_name();
             let name = os_name.to_string_lossy();
-            if name.as_bytes().iter().any(|&b| !(b'0'..=b'9').contains(&b)) {
+            if name.as_bytes().iter().any(|&b| !b.is_ascii_digit()) {
                 continue;
             }
             let pid: Pid = name.parse().unwrap();

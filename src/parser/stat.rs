@@ -122,7 +122,7 @@ impl StatParser {
                 None => unreachable!(),
             };
             //
-            cpu_ref.name = format!("cpu{}", idx);
+            cpu_ref.name = format!("cpu{idx}");
             //
             cpu_ref.user = myscan!(b" ");
             cpu_ref.nice = myscan!(b" ");
