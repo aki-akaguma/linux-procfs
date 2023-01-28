@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 * clippy: `uninlined\_format\_args`, `manual\_is\_ascii\_check`
+* bug: `InvalidDigit` on windows, removed `\r` from buffer
 
 
 ## [0.3.13] (2023-01-10)

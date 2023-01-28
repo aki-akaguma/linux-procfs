@@ -29,7 +29,21 @@ impl FileBuffer {
     }
     pub fn read_from_file(&mut self, file_handle: &mut fs::File) -> io::Result<usize> {
         self.buffer.clear();
-        file_handle.read_to_end(&mut self.buffer)
+        #[cfg(not(windows))]
+        {
+            file_handle.read_to_end(&mut self.buffer)
+        }
+        #[cfg(windows)]
+        {
+            let mut buf: Vec<u8> = vec![];
+            let _ = file_handle.read_to_end(&mut buf)?;
+            for &a in buf.iter() {
+                if a != b'\r' {
+                    self.buffer.push(a);
+                }
+            }
+            Ok(self.buffer.len())
+        }
     }
 }
 impl Default for FileBuffer {
