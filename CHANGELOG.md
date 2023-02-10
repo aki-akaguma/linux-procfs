@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] *
+### Changed
+* refactored `Makefile`
+
 ### Removed
 * `COPYING`
 
@@ -22,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * test status badges into `README.tpl`
 
 ### Fixed
-* clippy: `uninlined\_format\_args`, `manual\_is\_ascii\_check`
+* clippy: `uninlined_format_args`, `manual_is_ascii_check`
 * bug: `InvalidDigit` on windows, removed `\r` from buffer
 
 ## [0.3.13] (2023-01-10)
