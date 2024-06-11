@@ -186,7 +186,7 @@ impl System {
             .cpufreqs
             .resize(max_cpu_num, cpufreqs::CpuFreq::default());
         for idx in 0..max_cpu_num {
-            let mut cpufreq = &mut cpufreqs.cpufreqs[idx];
+            let cpufreq = &mut cpufreqs.cpufreqs[idx];
             cpufreq.cur = {
                 let slice = SYS_CPUFREQ_CUR.update_with_cpu_num(&self.base_path, &mut self.fb, idx);
                 parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)
@@ -235,7 +235,7 @@ impl System {
         pids.pidentries
             .resize(pid_vec.len(), pidentries::PidEntry::default());
         for (idx, &pid) in pid_vec.iter().enumerate() {
-            let mut pidentry = &mut pids.pidentries[idx];
+            let pidentry = &mut pids.pidentries[idx];
             pidentry.is_empty = true;
             //
             pidentry.stat = match self.get_pidentry_stat(pid) {
