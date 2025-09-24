@@ -9,12 +9,12 @@ keywords = ["procfs"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 edition = "2021"
-rust-version = "1.58.0"
+rust-version = "1.65.0"
 repository = "https://github.com/aki-akaguma/linux-procfs"
 
 [dependencies]
-naive_opt = "0.1"
-memx = "0.1"
+naive_opt = "0.2"
+memx = "0.2"
 cfg-iif = "0.2"
 
 [dev-dependencies]
