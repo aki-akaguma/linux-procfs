@@ -85,7 +85,21 @@ impl StatParser {
                 stat.cpu.steal = myscan!(b" ");
                 //
                 stat.cpu.guest = myscan!(b" ");
-                stat.cpu.guest_nice = myscan!(b"\n");
+                if !myscan!(check, b" ") {
+                    stat.cpu.guest_nice = myscan!(b"\n");
+                // up to here, on linux vx.x.x
+                } else {
+                    stat.cpu.guest_nice = myscan!(b" ");
+                    if myscan!(check, b" ") {
+                        cfg_iif!(feature = "has_stat_cguest" {
+                            stat.cpu.cguest = myscan!(b"\n");
+                        } else {
+                            myscan!(skip, b"\n");
+                        });
+                    } else {
+                        myscan!(skip, b"\n");
+                    }
+                }
             }
             let _ = pos1;
         }
@@ -139,7 +153,16 @@ impl StatParser {
                 cpu_ref.steal = myscan!(b" ");
                 //
                 cpu_ref.guest = myscan!(b" ");
-                cpu_ref.guest_nice = myscan!(b"\n");
+                if !myscan!(check, b" ") {
+                    cpu_ref.guest_nice = myscan!(b"\n");
+                } else {
+                    cpu_ref.guest_nice = myscan!(b" ");
+                    cfg_iif!(feature = "has_stat_cguest" {
+                        cpu_ref.cguest = myscan!(b"\n");
+                    } else {
+                        myscan!(skip, b"\n");
+                    });
+                }
             }
             let _ = pos1;
         }

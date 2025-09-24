@@ -12,6 +12,8 @@ pub struct Cpu {
     // up to here, on linux v2.6.18
     pub guest: u64,
     pub guest_nice: u64,
+    #[cfg(feature = "has_stat_cguest")]
+    pub cguest: u64,
 }
 
 #[derive(Debug, Default, Clone)]

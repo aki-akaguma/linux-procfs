@@ -32,10 +32,11 @@ maximum = ["has_stat_all", "has_meminfo_all", "has_vmstat_all",
 
 has_stat_min = []
 has_stat_some = []
-has_stat_all = ["has_stat_btime", "has_stat_procs_running", "has_stat_procs_blocked"]
+has_stat_all = ["has_stat_btime", "has_stat_procs_running", "has_stat_procs_blocked", "has_stat_cguest"]
 has_stat_btime = []
 has_stat_procs_running = []
 has_stat_procs_blocked = []
+has_stat_cguest = []
 
 has_meminfo_min = []
 has_meminfo_some = []
