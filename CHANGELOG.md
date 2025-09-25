@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 * `cguest` of `/proc/xxx/stat`
+* more tests
 
 ### Changed
 * update depend: memx(0.2), naive_opt(0.2)
