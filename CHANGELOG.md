@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * update depend: memx(0.2), naive_opt(0.2)
 * rust-version = "1.65.0"
 
+### Fixed
+* bug: some bits of cpufreqs, netdevs
+
 ## [0.3.16] (2024-06-18)
 ### Fixed
 * clippy: unused_mut

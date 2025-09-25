@@ -68,6 +68,16 @@ impl CpuFreqStatsTimeInStateParser {
             //   "%u %llu\n"
             //
             macro_rules! myscan {
+                (check, $needle:expr) => {{
+                    {
+                        let haystack = &sl[pos1..pos_end];
+                        let needle = $needle;
+                        match find_to_opt(haystack, needle) {
+                            Some(_pos) => true,
+                            None => false,
+                        }
+                    }
+                }};
                 (skip, $needle:expr) => {{
                     pos2 = {
                         let haystack = &sl[pos1..pos_end];
@@ -85,8 +95,12 @@ impl CpuFreqStatsTimeInStateParser {
                 }};
             }
             //
-            tis_ref.step = myscan!(b" ");
-            tis_ref.value = myscan!(b"\n");
+            if myscan!(check, b" ") {
+                tis_ref.step = myscan!(b" ");
+                tis_ref.value = myscan!(b"\n");
+            } else {
+                return vec![];
+            }
             let _ = pos1;
             //
             idx += 1;

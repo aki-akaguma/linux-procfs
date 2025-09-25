@@ -92,7 +92,8 @@ impl NetDevsParser {
                 net_ref.name = String::from_utf8_lossy(s).into_owned();
                 //
                 if sl[pos1..pos_end].starts_with(b" No statistics available.") {
-                    // nothing todo
+                    myscan!(skip, b"\n");
+                    let _ = pos1;
                 } else {
                     myscan!(skip_spaces);
                     {
