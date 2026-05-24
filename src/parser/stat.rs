@@ -1,7 +1,7 @@
 use crate::error::ProcError;
 use crate::stat::Cpu;
 use crate::stat::Stat;
-use crate::util::find_to_opt;
+use crate::util::{find_to_opt, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -63,11 +63,7 @@ impl StatParser {
             }};
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
-                let input = std::str::from_utf8(s)?;
-                input
-                    .trim()
-                    .parse()
-                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                FromBytes::from_bytes(s)?
             }};
         }
         {
@@ -190,11 +186,7 @@ impl StatParser {
             }};
             ($needle:expr) => {{
                 let s = myscan2!(skip, $needle);
-                let input = std::str::from_utf8(s)?;
-                input
-                    .trim()
-                    .parse()
-                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                FromBytes::from_bytes(s)?
             }};
         }
         //

@@ -4,7 +4,7 @@
 
 use crate::netdevs::NetDev;
 use crate::netdevs::NetDevs;
-use crate::util::{find_to_pos, skip_to_pos};
+use crate::util::{find_to_pos, skip_to_pos, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -68,9 +68,9 @@ impl NetDevsParser {
                 // from https://elixir.bootlin.com/linux/v2.6.18/source/net/core/dev.c
                 //
                 macro_rules! myscan {
-                    (skip_spaces) => {{
+                    (skip_spaces) => {
                         pos1 += skip_to_pos(&sl[pos1..pos_end], b' ');
-                    }};
+                    };
                     (skip, $needle:expr) => {{
                         pos2 = {
                             let haystack = &sl[pos1..pos_end];
@@ -83,17 +83,12 @@ impl NetDevsParser {
                     }};
                     ($needle:expr) => {{
                         let s = myscan!(skip, $needle);
-                        let input = String::from_utf8_lossy(s);
-                        input
-                            .as_ref()
-                            .parse()
-                            .map_err(|_| crate::ProcError::ParseError)?
+                        FromBytes::from_bytes(s)?
                     }};
                 }
                 //
                 myscan!(skip_spaces);
-                let s = myscan!(skip, b":");
-                net_ref.name = String::from_utf8_lossy(s).into_owned();
+                net_ref.name = myscan!(b":");
                 //
                 if sl[pos1..pos_end].starts_with(b" No statistics available.") {
                     myscan!(skip, b"\n");

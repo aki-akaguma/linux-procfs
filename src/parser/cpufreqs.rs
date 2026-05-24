@@ -3,7 +3,7 @@
 // https://elixir.bootlin.com/linux/v2.6.18/source/drivers/cpufreq/cpufreq_stats.c#L83
 
 use crate::cpufreqs::TimeInState;
-use crate::util::find_to_pos;
+use crate::util::{find_to_pos, FromBytes};
 use crate::ProcResult;
 
 #[allow(unused_imports)]
@@ -25,11 +25,7 @@ impl CpuFreqMaxParser {
         } else {
             sl
         };
-        let input = String::from_utf8_lossy(s);
-        input
-            .as_ref()
-            .parse()
-            .map_err(|_| crate::ProcError::ParseError)
+        FromBytes::from_bytes(s)
     }
 }
 
@@ -80,10 +76,7 @@ impl CpuFreqStatsTimeInStateParser {
                     {
                         let haystack = &sl[pos1..pos_end];
                         let needle = $needle;
-                        match find_to_opt(haystack, needle) {
-                            Some(_pos) => true,
-                            None => false,
-                        }
+                        find_to_opt(haystack, needle).is_some()
                     }
                 }};
                 (skip, $needle:expr) => {{
@@ -98,11 +91,7 @@ impl CpuFreqStatsTimeInStateParser {
                 }};
                 ($needle:expr) => {{
                     let s = myscan!(skip, $needle);
-                    let input = String::from_utf8_lossy(s);
-                    input
-                        .as_ref()
-                        .parse()
-                        .map_err(|_| crate::ProcError::ParseError)?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             //

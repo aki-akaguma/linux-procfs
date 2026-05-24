@@ -3,8 +3,7 @@
 // statm => https://elixir.bootlin.com/linux/v2.6.18/source/fs/proc/array.c#L476
 
 use crate::pidentries::PidStat;
-use crate::util::find_to_pos;
-use crate::util::rfind_to_pos;
+use crate::util::{find_to_pos, rfind_to_pos, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -34,11 +33,7 @@ impl PidStatParser {
                 return Err(crate::ProcError::ParseError);
             }
             let s = &sl[0..pos1 - 1];
-            let input = String::from_utf8_lossy(s);
-            stat.pid = input
-                .as_ref()
-                .parse()
-                .map_err(|_| crate::ProcError::ParseError)?;
+            stat.pid = FromBytes::from_bytes(s)?;
         }
         // comm
         {
@@ -52,7 +47,7 @@ impl PidStatParser {
             }
             cfg_iif!(feature = "has_pidentry_stat_comm" {
                 let s = &sl[pos1 + 1..pos2];
-                stat.comm = String::from_utf8_lossy(s).into_owned();
+                stat.comm = FromBytes::from_bytes(s)?;
             });
             //
             pos2 += 2;
@@ -81,11 +76,7 @@ impl PidStatParser {
                 }};
                 () => {{
                     let s = myscan!(skip);
-                    let input = String::from_utf8_lossy(s);
-                    input
-                        .as_ref()
-                        .parse()
-                        .map_err(|_| crate::ProcError::ParseError)?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             stat.ppid = myscan!();

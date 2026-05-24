@@ -6,7 +6,7 @@
 
 use crate::error::ProcError;
 use crate::meminfo::MemInfo;
-use crate::util::{find_to_opt, skip_to_opt};
+use crate::util::{find_to_opt, skip_to_opt, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -49,11 +49,7 @@ impl MemInfoParser {
             }};
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
-                let input = std::str::from_utf8(s)?;
-                input
-                    .trim()
-                    .parse()
-                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                FromBytes::from_bytes(s)?
             }};
         }
         macro_rules! myscan_field {

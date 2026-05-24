@@ -3,7 +3,7 @@
 // statm => https://elixir.bootlin.com/linux/v2.6.18/source/fs/proc/array.c#L476
 
 use crate::pidentries::PidStatm;
-use crate::util::find_to_pos;
+use crate::util::{find_to_pos, FromBytes};
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
@@ -33,11 +33,7 @@ impl PidStatmParser {
                     };
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
-                    let input = String::from_utf8_lossy(s);
-                    input
-                        .as_ref()
-                        .parse()
-                        .map_err(|_| crate::ProcError::ParseError)?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             statm.size = myscan!();

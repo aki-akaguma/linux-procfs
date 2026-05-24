@@ -4,7 +4,7 @@
 // status vm => https://elixir.bootlin.com/linux/v2.6.18/source/fs/proc/task_mmu.c#L14
 
 use crate::pidentries::PidStatus;
-use crate::util::{find_to_pos, skip_to_pos};
+use crate::util::{find_to_pos, skip_to_pos, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -41,8 +41,7 @@ impl PidStatusParser {
                 ($needle:expr) => {{
                     myscan!(skip, $needle);
                     let s = &sl[pos1..pos2];
-                    let input = String::from_utf8_lossy(s);
-                    input.into_owned()
+                    FromBytes::from_bytes(s)?
                 }};
             }
             status.name = myscan!(b"Name:\t");
@@ -90,11 +89,7 @@ impl PidStatusParser {
                 ($needle:expr) => {{
                     myscan!(skip, $needle);
                     let s = &sl[pos1..pos2];
-                    let input = String::from_utf8_lossy(s);
-                    input
-                        .as_ref()
-                        .parse()
-                        .map_err(|_| crate::ProcError::ParseError)?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             cfg_iif!(feature = "has_pidentry_status_tgid" {
@@ -123,11 +118,7 @@ impl PidStatusParser {
                     };
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
-                    let input = String::from_utf8_lossy(s);
-                    input
-                        .as_ref()
-                        .parse()
-                        .map_err(|_| crate::ProcError::ParseError)?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             pos1 = {

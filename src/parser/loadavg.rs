@@ -1,6 +1,6 @@
 use crate::error::ProcError;
 use crate::loadavg::LoadAvg;
-use crate::util::find_to_opt;
+use crate::util::{find_to_opt, FromBytes};
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
@@ -31,10 +31,7 @@ impl LoadAvgParser {
                 }};
                 ($needle:expr) => {{
                     let s = try_scan!(skip, $needle);
-                    let input = std::str::from_utf8(s)?;
-                    input.parse().map_err(|_| {
-                        ProcError::UnexpectedFormat(format!("Parse error: {}", input))
-                    })?
+                    FromBytes::from_bytes(s)?
                 }};
             }
             // content of /proc/loadavg

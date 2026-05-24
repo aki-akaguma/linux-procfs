@@ -4,7 +4,7 @@
 
 use crate::diskstats::DiskStat;
 use crate::diskstats::DiskStats;
-use crate::util::{find_to_pos, skip_to_pos};
+use crate::util::{find_to_pos, skip_to_pos, FromBytes};
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
@@ -72,11 +72,7 @@ impl DiskStatsParser {
                     }};
                     ($needle:expr) => {{
                         let s = myscan!(skip, $needle);
-                        let input = String::from_utf8_lossy(s);
-                        input
-                            .as_ref()
-                            .parse()
-                            .map_err(|_| crate::ProcError::ParseError)?
+                        FromBytes::from_bytes(s)?
                     }};
                     (or, $needle1:expr, $needle2:expr) => {{
                         let len1_opt = {
@@ -116,11 +112,7 @@ impl DiskStatsParser {
                             pos1 = pos2 + 1;
                             s
                         };
-                        let input = String::from_utf8_lossy(s);
-                        input
-                            .as_ref()
-                            .parse()
-                            .map_err(|_| crate::ProcError::ParseError)?
+                        FromBytes::from_bytes(s)?
                     }};
                 }
                 cfg_iif!(feature = "has_diskstats_device_number" {
