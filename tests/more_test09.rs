@@ -21,7 +21,7 @@ macro_rules! base_path_netdevs_no_stats {
 #[test]
 fn test_netdevs_zero() {
     let mut sys = System::new(base_path_netdevs_zero!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
 
     assert_eq!(netdevs.nets.len(), 1);
     let net = &netdevs.nets[0];
@@ -60,7 +60,7 @@ fn test_netdevs_zero() {
 #[test]
 fn test_netdevs_large() {
     let mut sys = System::new(base_path_netdevs_large!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
 
     assert_eq!(netdevs.nets.len(), 1);
     let net = &netdevs.nets[0];
@@ -99,7 +99,7 @@ fn test_netdevs_large() {
 #[test]
 fn test_netdevs_no_stats() {
     let mut sys = System::new(base_path_netdevs_no_stats!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
 
     assert_eq!(netdevs.nets.len(), 1);
     let net = &netdevs.nets[0];

@@ -88,7 +88,7 @@ macro_rules! assert_eq_net {
 #[test]
 fn test_netdevs_intel() {
     let mut sys = System::new(base_path_intel!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
     //
     assert_eq_net!(netdevs.nets[0] => ["lo" 1410863506 8884513 0 0 0 0 0 0 1410863506 8884513 0 0 0 0 0 0]);
     assert_eq_net!(netdevs.nets[1] => ["br0" 32062511411 26266110 0 0 0 0 0 0 2730076473 25361128 0 0 0 0 0 0]);
@@ -104,7 +104,7 @@ fn test_netdevs_intel() {
 #[test]
 fn test_netdevs_amd() {
     let mut sys = System::new(base_path_amd!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
     //
     assert_eq_net!(netdevs.nets[0] => ["vnet0" 237094338 1175908 0 0 0 0 0 0 382166977 1974065 0 0 0 0 0 0]);
     assert_eq_net!(netdevs.nets[1] => ["lo" 57680 924 0 0 0 0 0 0 57680 924 0 0 0 0 0 0]);
@@ -123,7 +123,7 @@ fn test_netdevs_amd() {
 #[test]
 fn test_netdevs_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
     //
     assert_eq_net!(netdevs.nets[0] => ["ens5" 0 0 0 0 0 0 0 0 3142 37 0 0 0 0 0 0]);
     assert_eq_net!(netdevs.nets[1] => ["br1" 528985 7047 0 0 0 0 0 0 532473 5666 0 0 0 0 0 0]);
@@ -142,7 +142,7 @@ fn test_netdevs_5_4() {
 #[test]
 fn test_netdevs_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let netdevs = sys.get_netdevs();
+    let netdevs = sys.get_netdevs().unwrap();
     //
     assert_eq_net!(netdevs.nets[0] => ["lxcbr0" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]);
     assert_eq_net!(netdevs.nets[1] => ["br0" 25841502897 21068674 0 0 0 0 0 0 20378207183 24125372 0 0 0 0 0 0]);

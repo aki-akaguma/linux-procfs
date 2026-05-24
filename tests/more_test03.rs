@@ -9,7 +9,8 @@ macro_rules! base_path_stat_features {
 #[test]
 fn test_stat_features_present() {
     let mut sys = System::new(base_path_stat_features!());
-    let _stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
+    let _ = stat;
 
     #[cfg(feature = "has_stat_btime")]
     {

@@ -27,7 +27,7 @@ macro_rules! base_path_5_4_intel {
 #[test]
 fn test_vmstat_intel() {
     let mut sys = System::new(base_path_intel!());
-    let vmstat = sys.get_vmstat();
+    let vmstat = sys.get_vmstat().unwrap();
     //
     #[cfg(feature = "has_vmstat_nr_free_pages")]
     assert_eq!(vmstat.nr_free_pages, 78396);
@@ -177,7 +177,7 @@ fn test_vmstat_intel() {
 #[test]
 fn test_vmstat_amd() {
     let mut sys = System::new(base_path_amd!());
-    let vmstat = sys.get_vmstat();
+    let vmstat = sys.get_vmstat().unwrap();
     //
     #[cfg(feature = "has_vmstat_nr_free_pages")]
     assert_eq!(vmstat.nr_free_pages, 44248);
@@ -327,7 +327,7 @@ fn test_vmstat_amd() {
 #[test]
 fn test_vmstat_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let vmstat = sys.get_vmstat();
+    let vmstat = sys.get_vmstat().unwrap();
     //
     #[cfg(feature = "has_vmstat_nr_free_pages")]
     assert_eq!(vmstat.nr_free_pages, 52441);
@@ -477,7 +477,7 @@ fn test_vmstat_5_4() {
 #[test]
 fn test_vmstat_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let vmstat = sys.get_vmstat();
+    let vmstat = sys.get_vmstat().unwrap();
     //
     #[cfg(feature = "has_vmstat_nr_free_pages")]
     assert_eq!(vmstat.nr_free_pages, 457563);

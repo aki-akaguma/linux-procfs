@@ -27,7 +27,7 @@ macro_rules! base_path_5_4_intel {
 #[test]
 fn test_meminfo_intel() {
     let mut sys = System::new(base_path_intel!());
-    let meminfo = sys.get_meminfo();
+    let meminfo = sys.get_meminfo().unwrap();
     //
     assert_eq!(meminfo.mem_total_kb, 8174572);
     assert_eq!(meminfo.mem_free_kb, 313584);
@@ -105,7 +105,7 @@ fn test_meminfo_intel() {
 #[test]
 fn test_meminfo_amd() {
     let mut sys = System::new(base_path_amd!());
-    let meminfo = sys.get_meminfo();
+    let meminfo = sys.get_meminfo().unwrap();
     //
     assert_eq!(meminfo.mem_total_kb, 8174996);
     assert_eq!(meminfo.mem_free_kb, 176992);
@@ -183,7 +183,7 @@ fn test_meminfo_amd() {
 #[test]
 fn test_meminfo_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let meminfo = sys.get_meminfo();
+    let meminfo = sys.get_meminfo().unwrap();
     //
     assert_eq!(meminfo.mem_total_kb, 1004672);
     assert_eq!(meminfo.mem_free_kb, 209496);
@@ -261,7 +261,7 @@ fn test_meminfo_5_4() {
 #[test]
 fn test_meminfo_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let meminfo = sys.get_meminfo();
+    let meminfo = sys.get_meminfo().unwrap();
     //
     assert_eq!(meminfo.mem_total_kb, 8152520);
     assert_eq!(meminfo.mem_free_kb, 1830280);

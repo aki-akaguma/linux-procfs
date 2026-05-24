@@ -15,7 +15,7 @@ macro_rules! base_path_diskstats_large {
 #[test]
 fn test_diskstats_zero() {
     let mut sys = System::new(base_path_diskstats_zero!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
 
     assert_eq!(diskstats.disks.len(), 1);
     let disk = &diskstats.disks[0];
@@ -46,7 +46,7 @@ fn test_diskstats_zero() {
 #[test]
 fn test_diskstats_large() {
     let mut sys = System::new(base_path_diskstats_large!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
 
     assert_eq!(diskstats.disks.len(), 1);
     let disk = &diskstats.disks[0];

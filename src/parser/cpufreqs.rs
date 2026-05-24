@@ -4,6 +4,7 @@
 
 use crate::cpufreqs::TimeInState;
 use crate::util::find_to_pos;
+use crate::ProcResult;
 
 #[allow(unused_imports)]
 use crate::util::find_to_opt;
@@ -12,16 +13,23 @@ use crate::util::find_to_opt;
 pub struct CpuFreqMaxParser();
 
 impl CpuFreqMaxParser {
-    pub fn parse(&mut self, sl: &[u8]) -> u32 {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<u32> {
         // content of /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
         //   "2403000\n"
         //
         if sl.is_empty() {
-            return 0;
+            return Ok(0);
         }
-        let s = &sl[0..sl.len() - 1];
+        let s = if sl.ends_with(b"\n") {
+            &sl[0..sl.len() - 1]
+        } else {
+            sl
+        };
         let input = String::from_utf8_lossy(s);
-        input.as_ref().parse().unwrap()
+        input
+            .as_ref()
+            .parse()
+            .map_err(|_| crate::ProcError::ParseError)
     }
 }
 
@@ -29,10 +37,10 @@ impl CpuFreqMaxParser {
 pub struct CpuFreqStatsTimeInStateParser();
 
 impl CpuFreqStatsTimeInStateParser {
-    pub fn parse(&mut self, sl: &[u8]) -> Vec<TimeInState> {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<Vec<TimeInState>> {
         let mut time_in_states = Vec::new();
         if sl.is_empty() {
-            return time_in_states;
+            return Ok(time_in_states);
         }
         //
         let mut pos1: usize = 0;
@@ -58,7 +66,7 @@ impl CpuFreqStatsTimeInStateParser {
             }
             let tis_ref: &mut TimeInState = match time_in_states.get_mut(idx) {
                 Some(tis) => tis,
-                None => unreachable!(),
+                None => return Err(crate::ProcError::InternalError),
             };
             //
             // content of /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state
@@ -91,7 +99,10 @@ impl CpuFreqStatsTimeInStateParser {
                 ($needle:expr) => {{
                     let s = myscan!(skip, $needle);
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             //
@@ -99,7 +110,7 @@ impl CpuFreqStatsTimeInStateParser {
                 tis_ref.step = myscan!(b" ");
                 tis_ref.value = myscan!(b"\n");
             } else {
-                return vec![];
+                return Ok(vec![]);
             }
             let _ = pos1;
             //
@@ -108,6 +119,6 @@ impl CpuFreqStatsTimeInStateParser {
         }
         time_in_states.resize(idx, TimeInState::default());
         //
-        time_in_states
+        Ok(time_in_states)
     }
 }

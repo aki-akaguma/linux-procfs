@@ -4,14 +4,15 @@
 
 use crate::pidentries::PidStatm;
 use crate::util::find_to_pos;
+use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
 pub struct PidStatmParser();
 impl PidStatmParser {
-    pub fn parse(&mut self, sl: &[u8]) -> PidStatm {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidStatm> {
         let mut statm = PidStatm::default();
         if sl.is_empty() {
-            return statm;
+            return Ok(statm);
         }
         //
         let mut pos1: usize = 0;
@@ -33,7 +34,10 @@ impl PidStatmParser {
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             statm.size = myscan!();
@@ -44,6 +48,6 @@ impl PidStatmParser {
             statm.data = myscan!();
             let _ = pos1;
         }
-        statm
+        Ok(statm)
     }
 }

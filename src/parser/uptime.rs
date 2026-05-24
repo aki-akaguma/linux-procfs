@@ -1,14 +1,16 @@
 use crate::uptime::Uptime;
-use crate::util::find_to_pos;
+use crate::util::find_to_opt;
+use crate::ProcResult;
+use crate::error::ProcError;
 
 #[derive(Debug, Default, Clone)]
 pub struct UptimeParser();
 
 impl UptimeParser {
-    pub fn parse(&mut self, sl: &[u8]) -> Uptime {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<Uptime> {
         let mut uptime = Uptime::default();
         if sl.is_empty() {
-            return uptime;
+            return Ok(uptime);
         }
         //
         let mut pos1: usize = 0;
@@ -19,7 +21,8 @@ impl UptimeParser {
                     pos2 = {
                         let haystack = &sl[pos1..];
                         let needle = $needle;
-                        pos1 + find_to_pos(haystack, needle)
+                        pos1 + find_to_opt(haystack, needle)
+                            .ok_or_else(|| ProcError::UnexpectedFormat("Delimiter not found".into()))?
                     };
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
@@ -27,8 +30,8 @@ impl UptimeParser {
                 }};
                 ($needle:expr) => {{
                     let s = myscan!(skip, $needle);
-                    let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    let input = std::str::from_utf8(s)?;
+                    input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
                 }};
             }
             //
@@ -40,6 +43,6 @@ impl UptimeParser {
             let _ = pos1;
         }
         //
-        uptime
+        Ok(uptime)
     }
 }

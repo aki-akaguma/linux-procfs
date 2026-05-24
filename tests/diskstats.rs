@@ -98,7 +98,7 @@ macro_rules! assert_eq_disk {
 #[test]
 fn test_diskstats_intel() {
     let mut sys = System::new(base_path_intel!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
     //
     assert_eq_disk!(diskstats.disks[0] => [7 0 "loop0" 0 0 0 0 0 0 0 0 0 0 0]);
     assert_eq_disk!(diskstats.disks[31] => [7 31 "loop31" 0 0 0 0 0 0 0 0 0 0 0]);
@@ -120,7 +120,7 @@ fn test_diskstats_intel() {
 #[test]
 fn test_diskstats_amd() {
     let mut sys = System::new(base_path_amd!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
     //
     assert_eq_disk!(diskstats.disks[0] => [7 0 "loop0" 0 0 0 0 0 0 0 0 0 0 0]);
     assert_eq_disk!(diskstats.disks[31] => [7 31 "loop31" 0 0 0 0 0 0 0 0 0 0 0]);
@@ -152,7 +152,7 @@ fn test_diskstats_amd() {
 #[test]
 fn test_diskstats_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
     //
     assert_eq_disk!(diskstats.disks[0] => [7 0 "loop0" 42 0 676 6 0 0 0 0 0 16 0]);
     assert_eq_disk!(diskstats.disks[31] => [7 31 "loop31" 0 0 0 0 0 0 0 0 0 0 0]);
@@ -166,7 +166,7 @@ fn test_diskstats_5_4() {
 #[test]
 fn test_diskstats_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let diskstats = sys.get_diskstats();
+    let diskstats = sys.get_diskstats().unwrap();
     //
     assert_eq_disk!(diskstats.disks[0] => [7 0 "loop0" 514 0 3326 388 0 0 0 0 0 237 350 0 0 0 0]);
     assert_eq_disk!(diskstats.disks[15] => [7 15 "loop15" 0 0 0 0 0 0 0 0 0 0 0]);

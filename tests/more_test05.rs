@@ -15,7 +15,7 @@ macro_rules! base_path_uptime_large {
 #[test]
 fn test_uptime_zero() {
     let mut sys = System::new(base_path_uptime_zero!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
 
     assert_eq!(uptime.seconds, 0.00);
 }
@@ -23,7 +23,7 @@ fn test_uptime_zero() {
 #[test]
 fn test_uptime_large() {
     let mut sys = System::new(base_path_uptime_large!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
 
     assert_eq!(uptime.seconds, 999999999.99);
 }

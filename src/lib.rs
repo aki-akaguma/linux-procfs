@@ -1,20 +1,25 @@
 /*!
 The linux-procfs crate is the data snap library for the `/proc/` filesystem on the linux os.
 
-This crate reads from `/proc` filesystem, scanne it, stores the value into the struct and returns it. This scans and holds only the required values by specifying `feature`.
+This crate reads from `/proc` filesystem, scanne it, stores the value into the struct and returns it. This scans and holds only the required values.
 
-# Feature
+# Usage
 
-- minimum support rustc 1.65.0 (897e37553 2022-11-02)
+## Setup
 
-# Example
+Add the following to your `Cargo.toml`:
+
+```toml
+[dependencies]
+linux-procfs = "0.3.17"
+```
 
 ## Example 1: load average
 
 ```
 use linux_procfs::System;
 let mut sys = System::new("/");
-let loadavg = sys.get_loadavg();
+let loadavg = sys.get_loadavg().unwrap();
 println!("{}, {}, {}, {}", loadavg.a1, loadavg.a5, loadavg.a15, loadavg.last_pid);
 ```
 
@@ -23,15 +28,12 @@ println!("{}, {}, {}, {}", loadavg.a1, loadavg.a5, loadavg.a15, loadavg.last_pid
 ```
 use linux_procfs::System;
 let mut sys = System::new("/");
-let diskstats = sys.get_diskstats();
+let diskstats = sys.get_diskstats().unwrap();
 for disk in diskstats.disks {
     println!("{}, {}, {}", disk.name, disk.rblk, disk.wblk);
 }
 ```
 */
-
-use std::fs;
-use std::path::{Path, PathBuf};
 
 pub mod loadavg;
 pub mod meminfo;
@@ -45,8 +47,12 @@ pub mod netdevs;
 pub mod cpufreqs;
 pub mod pidentries;
 
+pub mod error;
+
 mod parser;
 mod util;
+
+pub use crate::error::{ProcError, ProcResult};
 
 pub type Pid = i32;
 
@@ -55,6 +61,9 @@ pub struct System {
     base_path: PathBuf,
     fb: util::FileBuffer,
 }
+
+use std::fs;
+use std::path::{Path, PathBuf};
 
 impl System {
     /// create instance
@@ -72,108 +81,107 @@ impl System {
     }
     //
     /// `/proc/loadavg`
-    pub fn get_loadavg(&mut self) -> loadavg::LoadAvg {
+    pub fn get_loadavg(&mut self) -> ProcResult<loadavg::LoadAvg> {
         static PROC_FB: util::ProcFb = util::ProcFb {
             capacity: 40,
             name: "loadavg",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::loadavg::LoadAvgParser::default().parse(slice)
     }
     //
     /// `/proc/meminfo`
-    pub fn get_meminfo(&mut self) -> meminfo::MemInfo {
+    pub fn get_meminfo(&mut self) -> ProcResult<meminfo::MemInfo> {
         static PROC_FB: util::ProcFb = util::ProcFb {
             capacity: 1300,
             name: "meminfo",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::meminfo::MemInfoParser::default().parse(slice)
     }
     //
     /// `/proc/stat`
-    pub fn get_stat(&mut self) -> stat::Stat {
+    pub fn get_stat(&mut self) -> ProcResult<stat::Stat> {
         static PROC_FB: util::ProcFb = util::ProcFb {
             capacity: 1500,
             name: "stat",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::stat::StatParser::default().parse(slice)
     }
     //
     /// `/proc/uptime`
-    pub fn get_uptime(&mut self) -> uptime::Uptime {
+    pub fn get_uptime(&mut self) -> ProcResult<uptime::Uptime> {
         static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 30,
+            capacity: 50,
             name: "uptime",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::uptime::UptimeParser::default().parse(slice)
     }
     //
     /// `/proc/vmstat`
-    pub fn get_vmstat(&mut self) -> vmstat::VmStat {
+    pub fn get_vmstat(&mut self) -> ProcResult<vmstat::VmStat> {
         static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 2600,
+            capacity: 1500,
             name: "vmstat",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::vmstat::VmStatParser::default().parse(slice)
     }
     //
     /// `/proc/diskstats`
-    pub fn get_diskstats(&mut self) -> diskstats::DiskStats {
+    pub fn get_diskstats(&mut self) -> ProcResult<diskstats::DiskStats> {
         static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 3000,
+            capacity: 1000,
             name: "diskstats",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::diskstats::DiskStatsParser::default().parse(slice)
     }
     //
     /// `/proc/net/dev`
-    pub fn get_netdevs(&mut self) -> netdevs::NetDevs {
+    pub fn get_netdevs(&mut self) -> ProcResult<netdevs::NetDevs> {
         static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 2000,
+            capacity: 1000,
             name: "net/dev",
         };
-        let slice = PROC_FB.update(&self.base_path, &mut self.fb);
+        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
         parser::netdevs::NetDevsParser::default().parse(slice)
     }
     //
     /// maximum cpu number
-    pub fn get_max_cpu_num(&mut self) -> usize {
+    pub fn get_max_cpu_num(&mut self) -> ProcResult<usize> {
         let mut max_cpu_num = 0;
-        //
-        let cpu_path = format!(
-            "{}/sys/devices/system/cpu",
-            &self.base_path.to_str().unwrap()
-        );
-        for entry in fs::read_dir(cpu_path).unwrap() {
-            let entry = entry.unwrap();
+        let cpu_path = self.base_path.join("sys/devices/system/cpu");
+        for entry in fs::read_dir(cpu_path).map_err(|_| crate::ProcError::PermissionDenied)? {
+            let entry = entry.map_err(|_| crate::ProcError::InternalError)?;
             let os_name = entry.file_name();
             let name = os_name.to_string_lossy();
-            if name.starts_with("cpu") && name.len() > 3 {
-                let sl = &name[3..];
-                if let Ok(n) = sl.parse::<usize>() {
-                    if n > max_cpu_num {
-                        max_cpu_num = n;
-                    }
+            if !name.starts_with("cpu") {
+                continue;
+            }
+            let s_num = &name[3..];
+            if s_num.as_bytes().iter().any(|&b| !b.is_ascii_digit()) {
+                continue;
+            }
+            if let Ok(num) = s_num.parse::<usize>() {
+                if max_cpu_num < num {
+                    max_cpu_num = num;
                 }
             }
         }
-        //
-        max_cpu_num + 1
+        Ok(max_cpu_num + 1)
     }
     //
-    /// `/sys/devices/system/cpu/cpu0/cpufreq/`
-    pub fn get_cpufreqs(&mut self, max_cpu_num: usize) -> cpufreqs::CpuFreqs {
+    /// `/sys/devices/system/cpu/cpu*/cpufreq/`
+    pub fn get_cpufreqs(&mut self, max_cpu_num: usize) -> ProcResult<cpufreqs::CpuFreqs> {
         static SYS_CPUFREQ_CUR: util::SysCpuFb = util::SysCpuFb {
-            capacity: 10,
+            capacity: 20,
             name: "cpufreq/cpuinfo_cur_freq",
         };
         static SYS_CPUFREQ_MAX: util::SysCpuFb = util::SysCpuFb {
-            capacity: 10,
+            capacity: 20,
             name: "cpufreq/cpuinfo_max_freq",
         };
         static SYS_CPUFREQ_STATS_TIME_IN_STATE: util::SysCpuFb = util::SysCpuFb {
@@ -188,48 +196,58 @@ impl System {
         for idx in 0..max_cpu_num {
             let cpufreq = &mut cpufreqs.cpufreqs[idx];
             cpufreq.cur = {
-                let slice = SYS_CPUFREQ_CUR.update_with_cpu_num(&self.base_path, &mut self.fb, idx);
-                parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)
+                let slice = match SYS_CPUFREQ_CUR.try_update_with_cpu_num(&self.base_path, &mut self.fb, idx) {
+                    Ok(s) => s,
+                    Err(_) => &[],
+                };
+                parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)?
             };
             cpufreq.max = {
-                let slice = SYS_CPUFREQ_MAX.update_with_cpu_num(&self.base_path, &mut self.fb, idx);
-                parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)
+                let slice = match SYS_CPUFREQ_MAX.try_update_with_cpu_num(&self.base_path, &mut self.fb, idx) {
+                    Ok(s) => s,
+                    Err(_) => &[],
+                };
+                parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)?
             };
             cpufreq.time_in_states = {
-                let slice = SYS_CPUFREQ_STATS_TIME_IN_STATE.update_with_cpu_num(
+                let slice = match SYS_CPUFREQ_STATS_TIME_IN_STATE.try_update_with_cpu_num(
                     &self.base_path,
                     &mut self.fb,
                     idx,
-                );
-                parser::cpufreqs::CpuFreqStatsTimeInStateParser::default().parse(slice)
+                ) {
+                    Ok(s) => s,
+                    Err(_) => &[],
+                };
+                parser::cpufreqs::CpuFreqStatsTimeInStateParser::default().parse(slice)?
             };
         }
-        cpufreqs
+        Ok(cpufreqs)
     }
     //
     /// `/proc/<pid>/`
-    pub fn get_pids(&mut self) -> Vec<Pid> {
+    pub fn get_pids(&mut self) -> ProcResult<Vec<Pid>> {
         let mut v_pid = Vec::new();
         //
-        let proc_path = format!("{}/proc", &self.base_path.to_str().unwrap());
-        for entry in fs::read_dir(proc_path).unwrap() {
-            let entry = entry.unwrap();
+        let proc_path = self.base_path.join("proc");
+        for entry in fs::read_dir(proc_path).map_err(|_| crate::ProcError::PermissionDenied)? {
+            let entry = entry.map_err(|_| crate::ProcError::InternalError)?;
             let os_name = entry.file_name();
             let name = os_name.to_string_lossy();
             if name.as_bytes().iter().any(|&b| !b.is_ascii_digit()) {
                 continue;
             }
-            let pid: Pid = name.parse().unwrap();
-            v_pid.push(pid);
+            if let Ok(pid) = name.parse::<Pid>() {
+                v_pid.push(pid);
+            }
         }
         v_pid.sort_unstable();
         //
-        v_pid
+        Ok(v_pid)
     }
     //
     /// `/proc/<pid>/{stat, statm, status, cmdline}`
-    pub fn get_pidentries(&mut self) -> pidentries::PidEntries {
-        let pid_vec = self.get_pids();
+    pub fn get_pidentries(&mut self) -> ProcResult<pidentries::PidEntries> {
+        let pid_vec = self.get_pids()?;
         //
         let mut pids = pidentries::PidEntries::default();
         pids.pidentries
@@ -238,95 +256,117 @@ impl System {
             let pidentry = &mut pids.pidentries[idx];
             pidentry.is_empty = true;
             //
-            pidentry.stat = match self.get_pidentry_stat(pid) {
+            pidentry.stat = match self.get_pidentry_stat(pid)? {
                 Some(a) => a,
                 None => continue,
             };
-            pidentry.statm = match self.get_pidentry_statm(pid) {
+            pidentry.statm = match self.get_pidentry_statm(pid)? {
                 Some(a) => a,
                 None => continue,
             };
-            pidentry.status = match self.get_pidentry_status(pid) {
+            pidentry.status = match self.get_pidentry_status(pid)? {
                 Some(a) => a,
                 None => continue,
             };
-            pidentry.cmdline = match self.get_pidentry_cmdline(pid) {
+            pidentry.cmdline = match self.get_pidentry_cmdline(pid)? {
                 Some(a) => a,
                 None => continue,
             };
-            //
             pidentry.is_empty = false;
         }
-        pids
+        Ok(pids)
     }
     //
     /// `/proc/<pid>/stat`
-    pub fn get_pidentry_stat(&mut self, pid: Pid) -> Option<pidentries::PidStat> {
+    pub fn get_pidentry_stat(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStat>> {
         static PIDPROCS_STAT: util::PidFb = util::PidFb {
             capacity: 400,
             name: "stat",
         };
-        let slice = PIDPROCS_STAT.update_with_pid(&self.base_path, &mut self.fb, pid);
+        let slice = match PIDPROCS_STAT.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+            Ok(s) => s,
+            Err(_) => return Ok(None),
+        };
         if !slice.is_empty() {
-            Some(parser::pidstat::PidStatParser::default().parse(slice))
+            Ok(Some(parser::pidstat::PidStatParser::default().parse(slice)?))
         } else {
-            None
+            Ok(None)
         }
     }
     //
     /// `/proc/<pid>/statm`
-    pub fn get_pidentry_statm(&mut self, pid: Pid) -> Option<pidentries::PidStatm> {
+    pub fn get_pidentry_statm(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStatm>> {
         static PIDPROCS_STATM: util::PidFb = util::PidFb {
             capacity: 40,
             name: "statm",
         };
-        let slice = PIDPROCS_STATM.update_with_pid(&self.base_path, &mut self.fb, pid);
+        let slice = match PIDPROCS_STATM.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+            Ok(s) => s,
+            Err(_) => return Ok(None),
+        };
         if !slice.is_empty() {
-            Some(parser::pidstatm::PidStatmParser::default().parse(slice))
+            Ok(Some(
+                parser::pidstatm::PidStatmParser::default().parse(slice)?,
+            ))
         } else {
-            None
+            Ok(None)
         }
     }
     //
     /// `/proc/<pid>/status`
-    pub fn get_pidentry_status(&mut self, pid: Pid) -> Option<pidentries::PidStatus> {
+    pub fn get_pidentry_status(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStatus>> {
         static PIDPROCS_STATUS: util::PidFb = util::PidFb {
             capacity: 1100,
             name: "status",
         };
-        let slice = PIDPROCS_STATUS.update_with_pid(&self.base_path, &mut self.fb, pid);
+        let slice = match PIDPROCS_STATUS.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+            Ok(s) => s,
+            Err(_) => return Ok(None),
+        };
         if !slice.is_empty() {
-            Some(parser::pidstatus::PidStatusParser::default().parse(slice))
+            Ok(Some(
+                parser::pidstatus::PidStatusParser::default().parse(slice)?,
+            ))
         } else {
-            None
+            Ok(None)
         }
     }
     //
     /// `/proc/<pid>/cmdline`
-    pub fn get_pidentry_cmdline(&mut self, pid: Pid) -> Option<pidentries::PidCmdline> {
+    pub fn get_pidentry_cmdline(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidCmdline>> {
         static PIDPROCS_CMDLINE: util::PidFb = util::PidFb {
             capacity: 600,
             name: "cmdline",
         };
-        let slice = PIDPROCS_CMDLINE.update_with_pid(&self.base_path, &mut self.fb, pid);
+        let slice = match PIDPROCS_CMDLINE.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+            Ok(s) => s,
+            Err(_) => return Ok(None),
+        };
         if !slice.is_empty() {
-            Some(parser::pidcmdline::PidCmdlineParser::default().parse(slice))
+            Ok(Some(
+                parser::pidcmdline::PidCmdlineParser::default().parse(slice)?,
+            ))
         } else {
-            None
+            Ok(None)
         }
     }
     //
     /// `/proc/<pid>/comm`
-    pub fn get_pidentry_comm(&mut self, pid: Pid) -> Option<pidentries::PidCmdline> {
+    pub fn get_pidentry_comm(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidCmdline>> {
         static PIDPROCS_COMM: util::PidFb = util::PidFb {
             capacity: 600,
             name: "comm",
         };
-        let slice = PIDPROCS_COMM.update_with_pid(&self.base_path, &mut self.fb, pid);
+        let slice = match PIDPROCS_COMM.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+            Ok(s) => s,
+            Err(_) => return Ok(None),
+        };
         if !slice.is_empty() {
-            Some(parser::pidcmdline::PidCmdlineParser::default().parse(slice))
+            Ok(Some(
+                parser::pidcmdline::PidCmdlineParser::default().parse(slice)?,
+            ))
         } else {
-            None
+            Ok(None)
         }
     }
 }

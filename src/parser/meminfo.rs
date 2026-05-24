@@ -5,20 +5,19 @@
 // https://elixir.bootlin.com/linux/v2.6.28/source/fs/proc/meminfo.c
 
 use crate::meminfo::MemInfo;
-use crate::util::{find_to_pos, skip_to_pos};
+use crate::util::{find_to_opt, skip_to_opt};
+use crate::ProcResult;
+use crate::error::ProcError;
 use cfg_iif::cfg_iif;
-
-#[allow(unused_imports)]
-use crate::util::find_to_opt;
 
 #[derive(Debug, Default, Clone)]
 pub struct MemInfoParser();
 
 impl MemInfoParser {
-    pub fn parse(&mut self, sl: &[u8]) -> MemInfo {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<MemInfo> {
         let mut meminfo = MemInfo::default();
         if sl.is_empty() {
-            return meminfo;
+            return Ok(meminfo);
         }
         //
         let mut pos1: usize = 0;
@@ -26,23 +25,23 @@ impl MemInfoParser {
         //
         macro_rules! myscan {
             (check, $needle:expr) => {{
-                {
-                    let haystack = &sl[pos1..];
-                    let needle = $needle;
-                    match find_to_opt(haystack, needle) {
-                        Some(_pos) => true,
-                        None => false,
-                    }
-                }
+                let haystack = &sl[pos1..];
+                let needle = $needle;
+                find_to_opt(haystack, needle).is_some()
             }};
             (skip_spaces) => {{
-                pos1 += skip_to_pos(&sl[pos1..], b' ');
+                let haystack = &sl[pos1..];
+                match skip_to_opt(haystack, b' ') {
+                    Some(pos) => pos1 += pos,
+                    None => pos1 = sl.len(),
+                }
             }};
             (skip, $needle:expr) => {{
                 pos2 = {
                     let haystack = &sl[pos1..];
                     let needle = $needle;
-                    pos1 + find_to_pos(haystack, needle)
+                    pos1 + find_to_opt(haystack, needle)
+                        .ok_or_else(|| ProcError::UnexpectedFormat("Delimiter not found".into()))?
                 };
                 let s = &sl[pos1..pos2];
                 pos1 = pos2 + 1;
@@ -50,15 +49,17 @@ impl MemInfoParser {
             }};
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
-                let input = String::from_utf8_lossy(s);
-                input.as_ref().parse().unwrap()
+                let input = std::str::from_utf8(s)?;
+                input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
             }};
         }
         macro_rules! myscan_field {
             ($target:tt <= $needle:tt) => {{
                 let haystack = &sl[pos1..];
                 let needle = $needle;
-                pos1 = pos1 + needle.len() + find_to_pos(haystack, needle);
+                let found_pos = find_to_opt(haystack, needle)
+                    .ok_or_else(|| ProcError::UnexpectedFormat(format!("Field {} not found", std::str::from_utf8(needle).unwrap_or("?"))))?;
+                pos1 = pos1 + needle.len() + found_pos;
                 myscan!(skip_spaces);
                 meminfo.$target = myscan!(b" ");
             }};
@@ -66,7 +67,8 @@ impl MemInfoParser {
                 let haystack = &sl[pos1..];
                 let needle = $needle;
                 if myscan!(check, needle) {
-                    pos1 = pos1 + needle.len() + find_to_pos(haystack, needle);
+                    let found_pos = find_to_opt(haystack, needle).ok_or_else(|| ProcError::UnexpectedFormat("Field not found after check".into()))?;
+                    pos1 = pos1 + needle.len() + found_pos;
                     myscan!(skip_spaces);
                     meminfo.$target = myscan!(b" ");
                 }
@@ -200,6 +202,6 @@ impl MemInfoParser {
         //
         let _ = pos1;
         //
-        meminfo
+        Ok(meminfo)
     }
 }

@@ -5,6 +5,7 @@
 use crate::pidentries::PidStat;
 use crate::util::find_to_pos;
 use crate::util::rfind_to_pos;
+use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[allow(unused_imports)]
@@ -13,10 +14,10 @@ use crate::util::find_to_opt;
 #[derive(Debug, Default, Clone)]
 pub struct PidStatParser();
 impl PidStatParser {
-    pub fn parse(&mut self, sl: &[u8]) -> PidStat {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidStat> {
         let mut stat = PidStat::default();
         if sl.is_empty() {
-            return stat;
+            return Ok(stat);
         }
         //
         let mut pos1: usize;
@@ -29,9 +30,15 @@ impl PidStatParser {
                 let needle = b"(";
                 find_to_pos(haystack, needle)
             };
+            if pos1 == 0 || pos1 >= sl.len() {
+                return Err(crate::ProcError::ParseError);
+            }
             let s = &sl[0..pos1 - 1];
             let input = String::from_utf8_lossy(s);
-            stat.pid = input.as_ref().parse().unwrap();
+            stat.pid = input
+                .as_ref()
+                .parse()
+                .map_err(|_| crate::ProcError::ParseError)?;
         }
         // comm
         {
@@ -40,6 +47,9 @@ impl PidStatParser {
                 let needle = b")";
                 pos1 + rfind_to_pos(haystack, needle)
             };
+            if pos2 >= sl.len() {
+                return Err(crate::ProcError::ParseError);
+            }
             cfg_iif!(feature = "has_pidentry_stat_comm" {
                 let s = &sl[pos1 + 1..pos2];
                 stat.comm = String::from_utf8_lossy(s).into_owned();
@@ -50,7 +60,9 @@ impl PidStatParser {
         // %c state
         {
             cfg_iif!(feature = "has_pidentry_stat_state" {
-                stat.state = sl[pos2];
+                if pos2 < sl.len() {
+                    stat.state = sl[pos2];
+                }
             });
             pos1 = pos2 + 2;
         }
@@ -70,7 +82,10 @@ impl PidStatParser {
                 () => {{
                     let s = myscan!(skip);
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             stat.ppid = myscan!();
@@ -231,6 +246,6 @@ impl PidStatParser {
             });
             let _ = pos1;
         }
-        stat
+        Ok(stat)
     }
 }

@@ -5,6 +5,7 @@
 
 use crate::pidentries::PidStatus;
 use crate::util::{find_to_pos, skip_to_pos};
+use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[allow(unused_imports)]
@@ -13,10 +14,10 @@ use crate::util::find_to_opt;
 #[derive(Debug, Default, Clone)]
 pub struct PidStatusParser();
 impl PidStatusParser {
-    pub fn parse(&mut self, sl: &[u8]) -> PidStatus {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidStatus> {
         let mut status = PidStatus::default();
         if sl.is_empty() {
-            return status;
+            return Ok(status);
         }
         //
         //
@@ -90,7 +91,10 @@ impl PidStatusParser {
                     myscan!(skip, $needle);
                     let s = &sl[pos1..pos2];
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             cfg_iif!(feature = "has_pidentry_status_tgid" {
@@ -120,7 +124,10 @@ impl PidStatusParser {
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             pos1 = {
@@ -172,7 +179,10 @@ impl PidStatusParser {
                 ($needle:expr) => {{
                     let s = myscan!(skip, $needle);
                     let input = String::from_utf8_lossy(s);
-                    input.as_ref().parse().unwrap()
+                    input
+                        .as_ref()
+                        .parse()
+                        .map_err(|_| crate::ProcError::ParseError)?
                 }};
             }
             macro_rules! myscan_field {
@@ -203,7 +213,7 @@ impl PidStatusParser {
             //
             if !myscan!(check, b"VmPeak:\t") {
                 // some kernel thread do not has Vm, but no error.
-                return status;
+                return Ok(status);
             }
             cfg_iif!(feature = "has_pidentry_status_vm_peak" {
                 myscan_field!(vm_peak <= b"VmPeak:\t");
@@ -245,6 +255,6 @@ impl PidStatusParser {
             let _ = pos1;
         }
         //
-        status
+        Ok(status)
     }
 }

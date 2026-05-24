@@ -9,7 +9,7 @@ use std::path::Path;
 use super::Pid;
 
 pub struct FileBuffer {
-    buffer: Vec<u8>,
+    pub buffer: Vec<u8>,
 }
 
 impl FileBuffer {
@@ -57,24 +57,15 @@ pub struct ProcFb {
 }
 
 impl ProcFb {
-    pub fn update<'a>(&self, base_path: &Path, fb: &'a mut FileBuffer) -> &'a [u8] {
+    pub fn try_update<'a>(&self, base_path: &Path, fb: &'a mut FileBuffer) -> io::Result<&'a [u8]> {
         fb.clear();
         fb.least_capacity(self.capacity);
         {
-            let name = format!("{}/proc/{}", base_path.to_str().unwrap(), self.name);
-            let mut fh = match fs::OpenOptions::new().read(true).open(&name) {
-                Ok(fh) => fh,
-                Err(_) => return fb.buffer.as_slice(),
-            };
-            let _len = match fb.read_from_file(&mut fh) {
-                Ok(len) => len,
-                Err(err) => {
-                    eprintln!("{}: `{}`", err, &name);
-                    return fb.buffer.as_slice();
-                }
-            };
+            let name = base_path.join("proc").join(self.name);
+            let mut fh = fs::OpenOptions::new().read(true).open(&name)?;
+            fb.read_from_file(&mut fh)?;
         }
-        fb.buffer.as_slice()
+        Ok(fb.buffer.as_slice())
     }
 }
 
@@ -84,29 +75,20 @@ pub struct PidFb {
 }
 
 impl PidFb {
-    pub fn update_with_pid<'a>(
+    pub fn try_update_with_pid<'a>(
         &self,
         base_path: &Path,
         fb: &'a mut FileBuffer,
         pid: Pid,
-    ) -> &'a [u8] {
+    ) -> io::Result<&'a [u8]> {
         fb.clear();
         fb.least_capacity(self.capacity);
         {
-            let name = format!("{}/proc/{}/{}", base_path.to_str().unwrap(), pid, self.name);
-            let mut fh = match fs::OpenOptions::new().read(true).open(&name) {
-                Ok(fh) => fh,
-                Err(_) => return fb.buffer.as_slice(),
-            };
-            let _len = match fb.read_from_file(&mut fh) {
-                Ok(len) => len,
-                Err(err) => {
-                    eprintln!("{}: `{}`", err, &name);
-                    return fb.buffer.as_slice();
-                }
-            };
+            let name = base_path.join("proc").join(pid.to_string()).join(self.name);
+            let mut fh = fs::OpenOptions::new().read(true).open(&name)?;
+            fb.read_from_file(&mut fh)?;
         }
-        fb.buffer.as_slice()
+        Ok(fb.buffer.as_slice())
     }
 }
 
@@ -116,34 +98,27 @@ pub struct SysCpuFb {
 }
 
 impl SysCpuFb {
-    pub fn update_with_cpu_num<'a>(
+    pub fn try_update_with_cpu_num<'a>(
         &self,
         base_path: &Path,
         fb: &'a mut FileBuffer,
         cpu_num: usize,
-    ) -> &'a [u8] {
+    ) -> io::Result<&'a [u8]> {
         fb.clear();
         fb.least_capacity(self.capacity);
         {
-            let name = format!(
-                "{}/sys/devices/system/cpu/cpu{}/{}",
-                base_path.to_str().unwrap(),
-                cpu_num,
-                self.name
-            );
-            let mut fh = match fs::OpenOptions::new().read(true).open(&name) {
-                Ok(fh) => fh,
-                Err(_) => return fb.buffer.as_slice(),
-            };
-            let _len = match fb.read_from_file(&mut fh) {
-                Ok(len) => len,
-                Err(err) => {
-                    eprintln!("{}: `{}`", err, &name);
-                    return fb.buffer.as_slice();
-                }
-            };
+            let cpu_dir = format!("cpu{}", cpu_num);
+            let name = base_path
+                .join("sys")
+                .join("devices")
+                .join("system")
+                .join("cpu")
+                .join(cpu_dir)
+                .join(self.name);
+            let mut fh = fs::OpenOptions::new().read(true).open(&name)?;
+            fb.read_from_file(&mut fh)?;
         }
-        fb.buffer.as_slice()
+        Ok(fb.buffer.as_slice())
     }
 }
 

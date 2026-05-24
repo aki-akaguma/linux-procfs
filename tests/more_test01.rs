@@ -9,7 +9,8 @@ macro_rules! base_path_amd {
 #[test]
 fn test_stat_cguest_not_present() {
     let mut sys = System::new(base_path_amd!());
-    let _stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
+    let _ = stat;
 
     // Assert that cguest is 0 when the feature is enabled but not present in the fixture
     #[cfg(feature = "has_stat_cguest")]

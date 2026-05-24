@@ -3,21 +3,20 @@
 // https://elixir.bootlin.com/linux/v2.6.18/source/mm/vmstat.c#L438
 // https://elixir.bootlin.com/linux/v2.6.26/source/mm/vmstat.c#L601
 
-use crate::util::{find_to_pos, skip_to_pos};
+use crate::util::{find_to_opt, skip_to_opt};
 use crate::vmstat::VmStat;
+use crate::ProcResult;
+use crate::error::ProcError;
 use cfg_iif::cfg_iif;
-
-#[allow(unused_imports)]
-use crate::util::find_to_opt;
 
 #[derive(Debug, Default, Clone)]
 pub struct VmStatParser();
 
 impl VmStatParser {
-    pub fn parse(&mut self, sl: &[u8]) -> VmStat {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<VmStat> {
         let mut vmstat = VmStat::default();
         if sl.is_empty() {
-            return vmstat;
+            return Ok(vmstat);
         }
         //
         let mut pos1: usize = 0;
@@ -25,23 +24,23 @@ impl VmStatParser {
         //
         macro_rules! myscan {
             (check, $needle:expr) => {{
-                {
-                    let haystack = &sl[pos1..];
-                    let needle = $needle;
-                    match find_to_opt(haystack, needle) {
-                        Some(_pos) => true,
-                        None => false,
-                    }
-                }
+                let haystack = &sl[pos1..];
+                let needle = $needle;
+                find_to_opt(haystack, needle).is_some()
             }};
             (skip_spaces) => {{
-                pos1 += skip_to_pos(&sl[pos1..], b' ');
+                let haystack = &sl[pos1..];
+                match skip_to_opt(haystack, b' ') {
+                    Some(pos) => pos1 += pos,
+                    None => pos1 = sl.len(),
+                }
             }};
             (skip, $needle:expr) => {{
                 pos2 = {
                     let haystack = &sl[pos1..];
                     let needle = $needle;
-                    pos1 + find_to_pos(haystack, needle)
+                    pos1 + find_to_opt(haystack, needle)
+                        .ok_or_else(|| ProcError::UnexpectedFormat("Delimiter not found".into()))?
                 };
                 let s = &sl[pos1..pos2];
                 pos1 = pos2 + 1;
@@ -49,15 +48,17 @@ impl VmStatParser {
             }};
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
-                let input = String::from_utf8_lossy(s);
-                input.as_ref().parse().unwrap()
+                let input = std::str::from_utf8(s)?;
+                input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
             }};
         }
         macro_rules! myscan_field {
             ($target:tt <= $needle:tt) => {{
                 let haystack = &sl[pos1..];
                 let needle = $needle;
-                pos1 = pos1 + needle.len() + find_to_pos(haystack, needle);
+                let found_pos = find_to_opt(haystack, needle)
+                    .ok_or_else(|| ProcError::UnexpectedFormat(format!("Field {} not found", std::str::from_utf8(needle).unwrap_or("?"))))?;
+                pos1 = pos1 + needle.len() + found_pos;
                 myscan!(skip_spaces);
                 vmstat.$target = myscan!(b"\n");
             }};
@@ -65,7 +66,8 @@ impl VmStatParser {
                 let haystack = &sl[pos1..];
                 let needle = $needle;
                 if myscan!(check, needle) {
-                    pos1 = pos1 + needle.len() + find_to_pos(haystack, needle);
+                    let found_pos = find_to_opt(haystack, needle).ok_or_else(|| ProcError::UnexpectedFormat("Field not found after check".into()))?;
+                    pos1 = pos1 + needle.len() + found_pos;
                     myscan!(skip_spaces);
                     vmstat.$target = myscan!(b"\n");
                 }
@@ -292,6 +294,6 @@ impl VmStatParser {
         //
         let _ = pos1;
         //
-        vmstat
+        Ok(vmstat)
     }
 }

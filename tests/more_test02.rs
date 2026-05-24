@@ -9,7 +9,8 @@ macro_rules! base_path_cguest {
 #[test]
 fn test_stat_cguest_present() {
     let mut sys = System::new(base_path_cguest!());
-    let _stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
+    let _ = stat;
 
     // Assert that cguest has the expected value when the feature is enabled and present in the fixture
     #[cfg(feature = "has_stat_cguest")]

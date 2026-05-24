@@ -58,7 +58,7 @@ macro_rules! assert_eq_cpu {
 #[test]
 fn test_stat_intel() {
     let mut sys = System::new(base_path_intel!());
-    let stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
     //
     assert_eq_cpu!(stat.cpu => ["cpu" 13450128 1201947 2371263 166843529 846927 0 119211 0 0 0]);
     assert_eq_cpu!(stat.cpus[0] => ["cpu0" 3660732 216845 509911 41618446 231264 0 6742 0 0 0]);
@@ -83,7 +83,7 @@ fn test_stat_intel() {
 #[test]
 fn test_stat_amd() {
     let mut sys = System::new(base_path_amd!());
-    let stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
     //
     assert_eq_cpu!(stat.cpu => ["cpu" 13357385 2432 2460563 42834808 342959 0 36466 0 11961063 0]);
     assert_eq_cpu!(stat.cpus[0] => ["cpu0" 3381999 448 616970 10688006 77220 0 3074 0 3040704 0]);
@@ -108,7 +108,7 @@ fn test_stat_amd() {
 #[test]
 fn test_stat_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
     //
     assert_eq_cpu!(stat.cpu => ["cpu" 9289 834 7030 12789586 1391 0 2458 10622 0 0]);
     assert_eq_cpu!(stat.cpus[0] => ["cpu0" 4505 342 3770 6387284 908 0 2080 6843 0 0]);
@@ -131,7 +131,7 @@ fn test_stat_5_4() {
 #[test]
 fn test_stat_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let stat = sys.get_stat();
+    let stat = sys.get_stat().unwrap();
     //
     assert_eq_cpu!(stat.cpu => ["cpu" 12717643 5463599 4106560 71307156 2056153 0 424001 0 0 0]);
     assert_eq_cpu!(stat.cpus[0] => ["cpu0" 3146141 1411073 1073853 17285153 1086180 0 28023 0 0 0]);

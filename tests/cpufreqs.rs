@@ -29,9 +29,9 @@ macro_rules! assert_eq_time_in_state {
 #[test]
 fn test_cpufreqs_intel() {
     let mut sys = System::new(base_path_intel!());
-    let max_cpu_num = sys.get_max_cpu_num();
+    let max_cpu_num = sys.get_max_cpu_num().unwrap();
     assert_eq!(max_cpu_num, 4);
-    let cpufreqs = sys.get_cpufreqs(max_cpu_num);
+    let cpufreqs = sys.get_cpufreqs(max_cpu_num).unwrap();
     //
     assert_eq!(cpufreqs.cpufreqs[0].cur, 1870000);
     assert_eq!(cpufreqs.cpufreqs[0].max, 2403000);
@@ -65,9 +65,9 @@ fn test_cpufreqs_intel() {
 #[test]
 fn test_cpufreqs_amd() {
     let mut sys = System::new(base_path_amd!());
-    let max_cpu_num = sys.get_max_cpu_num();
+    let max_cpu_num = sys.get_max_cpu_num().unwrap();
     assert_eq!(max_cpu_num, 4);
-    let cpufreqs = sys.get_cpufreqs(max_cpu_num);
+    let cpufreqs = sys.get_cpufreqs(max_cpu_num).unwrap();
     //
     assert_eq!(cpufreqs.cpufreqs[0].cur, 2600000);
     assert_eq!(cpufreqs.cpufreqs[0].max, 2600000);
@@ -101,9 +101,9 @@ fn test_cpufreqs_amd() {
 #[test]
 fn test_cpufreqs_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let max_cpu_num = sys.get_max_cpu_num();
+    let max_cpu_num = sys.get_max_cpu_num().unwrap();
     assert_eq!(max_cpu_num, 4);
-    let cpufreqs = sys.get_cpufreqs(max_cpu_num);
+    let cpufreqs = sys.get_cpufreqs(max_cpu_num).unwrap();
     //
     assert_eq!(cpufreqs.cpufreqs[0].cur, 2403000);
     assert_eq!(cpufreqs.cpufreqs[0].max, 2403000);

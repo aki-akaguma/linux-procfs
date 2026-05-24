@@ -15,7 +15,7 @@ macro_rules! base_path_loadavg_high {
 #[test]
 fn test_loadavg_zero() {
     let mut sys = System::new(base_path_loadavg_zero!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
 
     assert_eq!(loadavg.a1, 0.00);
     assert_eq!(loadavg.a5, 0.00);
@@ -26,7 +26,7 @@ fn test_loadavg_zero() {
 #[test]
 fn test_loadavg_high() {
     let mut sys = System::new(base_path_loadavg_high!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
 
     assert_eq!(loadavg.a1, 100.00);
     assert_eq!(loadavg.a5, 90.00);

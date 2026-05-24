@@ -5,6 +5,7 @@
 use crate::diskstats::DiskStat;
 use crate::diskstats::DiskStats;
 use crate::util::{find_to_pos, skip_to_pos};
+use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[allow(unused_imports)]
@@ -14,10 +15,10 @@ use crate::util::find_to_opt;
 pub struct DiskStatsParser();
 
 impl DiskStatsParser {
-    pub fn parse(&mut self, sl: &[u8]) -> DiskStats {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<DiskStats> {
         let mut diskstats = DiskStats::default();
         if sl.is_empty() {
-            return diskstats;
+            return Ok(diskstats);
         }
         //
         let mut pos1: usize = 0;
@@ -43,7 +44,7 @@ impl DiskStatsParser {
             }
             let disk_ref: &mut DiskStat = match diskstats.disks.get_mut(idx) {
                 Some(disk) => disk,
-                None => unreachable!(),
+                None => return Err(crate::ProcError::InternalError),
             };
             {
                 // content of /proc/diskstats
@@ -72,7 +73,10 @@ impl DiskStatsParser {
                     ($needle:expr) => {{
                         let s = myscan!(skip, $needle);
                         let input = String::from_utf8_lossy(s);
-                        input.as_ref().parse().unwrap()
+                        input
+                            .as_ref()
+                            .parse()
+                            .map_err(|_| crate::ProcError::ParseError)?
                     }};
                     (or, $needle1:expr, $needle2:expr) => {{
                         let len1_opt = {
@@ -102,7 +106,7 @@ impl DiskStatsParser {
                                     None => match len2_opt {
                                         Some(len2) => len2,
                                         None => {
-                                            unreachable!();
+                                            return Err(crate::ProcError::ParseError);
                                         }
                                     },
                                 }
@@ -113,7 +117,10 @@ impl DiskStatsParser {
                             s
                         };
                         let input = String::from_utf8_lossy(s);
-                        input.as_ref().parse().unwrap()
+                        input
+                            .as_ref()
+                            .parse()
+                            .map_err(|_| crate::ProcError::ParseError)?
                     }};
                 }
                 cfg_iif!(feature = "has_diskstats_device_number" {
@@ -173,6 +180,6 @@ impl DiskStatsParser {
         }
         diskstats.disks.resize(idx, DiskStat::default());
         //
-        diskstats
+        Ok(diskstats)
     }
 }

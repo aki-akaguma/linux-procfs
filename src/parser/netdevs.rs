@@ -5,6 +5,7 @@
 use crate::netdevs::NetDev;
 use crate::netdevs::NetDevs;
 use crate::util::{find_to_pos, skip_to_pos};
+use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[allow(unused_imports)]
@@ -14,10 +15,10 @@ use crate::util::find_to_opt;
 pub struct NetDevsParser();
 
 impl NetDevsParser {
-    pub fn parse(&mut self, sl: &[u8]) -> NetDevs {
+    pub fn parse(&mut self, sl: &[u8]) -> ProcResult<NetDevs> {
         let mut netdevs = NetDevs::default();
         if sl.is_empty() {
-            return netdevs;
+            return Ok(netdevs);
         }
         //
         let mut pos1: usize = 0;
@@ -54,7 +55,7 @@ impl NetDevsParser {
             }
             let net_ref: &mut NetDev = match netdevs.nets.get_mut(idx) {
                 Some(net) => net,
-                None => unreachable!(),
+                None => return Err(crate::ProcError::InternalError),
             };
             {
                 // content of /proc/net/dev
@@ -83,7 +84,10 @@ impl NetDevsParser {
                     ($needle:expr) => {{
                         let s = myscan!(skip, $needle);
                         let input = String::from_utf8_lossy(s);
-                        input.as_ref().parse().unwrap()
+                        input
+                            .as_ref()
+                            .parse()
+                            .map_err(|_| crate::ProcError::ParseError)?
                     }};
                 }
                 //
@@ -193,6 +197,6 @@ impl NetDevsParser {
         }
         netdevs.nets.resize(idx, NetDev::default());
         //
-        netdevs
+        Ok(netdevs)
     }
 }

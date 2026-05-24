@@ -27,7 +27,7 @@ macro_rules! base_path_5_4_intel {
 #[test]
 fn test_loadavg_intel() {
     let mut sys = System::new(base_path_intel!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
     //
     assert_eq!(loadavg.a1, 0.68);
     assert_eq!(loadavg.a5, 0.50);
@@ -38,7 +38,7 @@ fn test_loadavg_intel() {
 #[test]
 fn test_loadavg_amd() {
     let mut sys = System::new(base_path_amd!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
     //
     assert_eq!(loadavg.a1, 1.33);
     assert_eq!(loadavg.a5, 1.42);
@@ -49,7 +49,7 @@ fn test_loadavg_amd() {
 #[test]
 fn test_loadavg_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
     //
     assert_eq!(loadavg.a1, 0.03);
     assert_eq!(loadavg.a5, 0.01);
@@ -60,7 +60,7 @@ fn test_loadavg_5_4() {
 #[test]
 fn test_loadavg_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let loadavg = sys.get_loadavg();
+    let loadavg = sys.get_loadavg().unwrap();
     //
     assert_eq!(loadavg.a1, 2.14);
     assert_eq!(loadavg.a5, 2.09);

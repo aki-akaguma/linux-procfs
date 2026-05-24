@@ -391,7 +391,7 @@ macro_rules! assert_eq_status {
 #[test]
 fn test_pidentries_intel() {
     let mut sys = System::new(base_path_intel!());
-    let pidentries = sys.get_pidentries();
+    let pidentries = sys.get_pidentries().unwrap();
     //
     assert_eq!(pidentries.pidentries.len(), 366);
     //
@@ -556,7 +556,7 @@ fn test_pidentries_intel() {
 #[test]
 fn test_pidentries_amd() {
     let mut sys = System::new(base_path_amd!());
-    let pidentries = sys.get_pidentries();
+    let pidentries = sys.get_pidentries().unwrap();
     //
     assert_eq!(pidentries.pidentries.len(), 212);
     //
@@ -714,7 +714,7 @@ fn test_pidentries_amd() {
 #[test]
 fn test_pidentries_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let pidentries = sys.get_pidentries();
+    let pidentries = sys.get_pidentries().unwrap();
     //
     assert_eq!(pidentries.pidentries.len(), 334);
     //

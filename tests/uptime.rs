@@ -27,7 +27,7 @@ macro_rules! base_path_5_4_intel {
 #[test]
 fn test_uptime_intel() {
     let mut sys = System::new(base_path_intel!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
     //
     assert_eq!(uptime.seconds, 464226.62);
 }
@@ -35,7 +35,7 @@ fn test_uptime_intel() {
 #[test]
 fn test_uptime_amd() {
     let mut sys = System::new(base_path_amd!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
     //
     assert_eq!(uptime.seconds, 148978.30);
 }
@@ -43,7 +43,7 @@ fn test_uptime_amd() {
 #[test]
 fn test_uptime_5_4() {
     let mut sys = System::new(base_path_5_4!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
     //
     assert_eq!(uptime.seconds, 64216.93);
 }
@@ -51,7 +51,7 @@ fn test_uptime_5_4() {
 #[test]
 fn test_uptime_5_4_intel() {
     let mut sys = System::new(base_path_5_4_intel!());
-    let uptime = sys.get_uptime();
+    let uptime = sys.get_uptime().unwrap();
     //
     assert_eq!(uptime.seconds, 244665.07);
 }
