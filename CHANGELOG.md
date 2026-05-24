@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fallible update methods (`try_update`, `try_update_with_pid`, etc.) in `util`.
 
 ### Changed
+* `cargo test --tests` in `.github/workflows/test-macos.yml`
 * Refactored all `get_*` methods in `System` to return `ProcResult<T>` instead of `T`. This is a breaking change.
 * Refactored all parsers to propagate errors using `?` instead of panicking with `unwrap()` or `unreachable!()`.
 * Updated path handling to use `PathBuf` joining for better reliability on non-UTF-8 paths.
