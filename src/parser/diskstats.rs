@@ -4,12 +4,9 @@
 
 use crate::diskstats::DiskStat;
 use crate::diskstats::DiskStats;
-use crate::util::{find_to_pos, skip_to_pos, FromBytes};
+use crate::scanner::ProcScanner;
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
-
-#[allow(unused_imports)]
-use crate::util::find_to_opt;
 
 #[derive(Debug, Default, Clone)]
 pub struct DiskStatsParser();
@@ -21,23 +18,9 @@ impl DiskStatsParser {
             return Ok(diskstats);
         }
         //
-        let mut pos1: usize = 0;
-        let mut pos2: usize;
-        let mut pos_end: usize;
+        let mut sc = ProcScanner::new(sl);
         let mut idx: usize = 0;
-        'disk_loop: loop {
-            if pos1 >= sl.len() {
-                break 'disk_loop;
-            }
-            //
-            let haystack = &sl[pos1..];
-            let needle = b"\n";
-            pos_end = pos1
-                + 1
-                + match find_to_opt(haystack, needle) {
-                    Some(pos) => pos,
-                    None => break 'disk_loop,
-                };
+        while !sc.is_empty() {
             //
             if idx >= diskstats.disks.len() {
                 diskstats.disks.resize(idx + 1, DiskStat::default());
@@ -56,119 +39,72 @@ impl DiskStatsParser {
                 // on linux 5.4.0
                 //   " 252       0 vda 14907 5047 1609802 6814 37573 12037 1280416 107798 0 34264 78540 0 0 0 0\n"
                 //
-                macro_rules! myscan {
-                    (skip_spaces) => {{
-                        pos1 += skip_to_pos(&sl[pos1..pos_end], b' ');
-                    }};
-                    (skip, $needle:expr) => {{
-                        pos2 = {
-                            let haystack = &sl[pos1..pos_end];
-                            let needle = $needle;
-                            pos1 + find_to_pos(haystack, needle)
-                        };
-                        let s = &sl[pos1..pos2];
-                        pos1 = pos2 + 1;
-                        s
-                    }};
-                    ($needle:expr) => {{
-                        let s = myscan!(skip, $needle);
-                        FromBytes::from_bytes(s)?
-                    }};
-                    (or, $needle1:expr, $needle2:expr) => {{
-                        let len1_opt = {
-                            let haystack = &sl[pos1..pos_end];
-                            let needle = $needle1;
-                            find_to_opt(haystack, needle)
-                        };
-                        let len2_opt = {
-                            let haystack = &sl[pos1..pos_end];
-                            let needle = $needle2;
-                            find_to_opt(haystack, needle)
-                        };
-                        //
-                        let s = {
-                            let len = {
-                                match len1_opt {
-                                    Some(len1) => match len2_opt {
-                                        Some(len2) => {
-                                            if len1 < len2 {
-                                                len1
-                                            } else {
-                                                len2
-                                            }
-                                        }
-                                        None => len1,
-                                    },
-                                    None => match len2_opt {
-                                        Some(len2) => len2,
-                                        None => {
-                                            return Err(crate::ProcError::ParseError);
-                                        }
-                                    },
-                                }
-                            };
-                            pos2 = pos1 + len;
-                            let s = &sl[pos1..pos2];
-                            pos1 = pos2 + 1;
-                            s
-                        };
-                        FromBytes::from_bytes(s)?
-                    }};
-                }
                 cfg_iif!(feature = "has_diskstats_device_number" {
-                    myscan!(skip_spaces);
-                    disk_ref.major_num = myscan!(b" ");
-                    myscan!(skip_spaces);
-                    disk_ref.minor_num = myscan!(b" ");
+                    sc.skip_spaces();
+                    disk_ref.major_num = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.minor_num = sc.next(b' ')?;
                 } else {
                     // device major number
-                    myscan!(skip_spaces);
-                    myscan!(skip, b" ");
-                    // device mainor number
-                    myscan!(skip_spaces);
-                    myscan!(skip, b" ");
+                    sc.skip_spaces();
+                    sc.scan_until(b' ')?;
+                    // device minor number
+                    sc.skip_spaces();
+                    sc.scan_until(b' ')?;
                 });
                 // device name
                 {
-                    let s = myscan!(skip, b" ");
+                    sc.skip_spaces();
+                    let s = sc.scan_until(b' ')?;
                     disk_ref.name = String::from_utf8_lossy(s).into_owned();
                 }
                 // read & write
                 {
-                    disk_ref.rio = myscan!(b" ");
-                    disk_ref.rmerge = myscan!(b" ");
-                    disk_ref.rblk = myscan!(b" ");
-                    disk_ref.ruse = myscan!(b" ");
+                    sc.skip_spaces();
+                    disk_ref.rio = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.rmerge = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.rblk = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.ruse = sc.next(b' ')?;
                     //
-                    disk_ref.wio = myscan!(b" ");
-                    disk_ref.wmerge = myscan!(b" ");
-                    disk_ref.wblk = myscan!(b" ");
-                    disk_ref.wuse = myscan!(b" ");
+                    sc.skip_spaces();
+                    disk_ref.wio = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.wmerge = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.wblk = sc.next(b' ')?;
+                    sc.skip_spaces();
+                    disk_ref.wuse = sc.next(b' ')?;
                 }
                 //
                 cfg_iif!(feature = "has_diskstats_running" {
-                    disk_ref.running = myscan!(b" ");
+                    sc.skip_spaces();
+                    disk_ref.running = sc.next(b' ')?;
                 } else {
-                    myscan!(skip, b" "); // running
+                    sc.skip_spaces();
+                    sc.scan_until(b' ')?; // running
                 });
                 //
                 cfg_iif!(feature = "has_diskstats_use" {
-                    disk_ref.use_ = myscan!(b" ");
+                    sc.skip_spaces();
+                    disk_ref.use_ = sc.next(b' ')?;
                 } else {
-                    myscan!(skip, b" "); // use
+                    sc.skip_spaces();
+                    sc.scan_until(b' ')?; // use
                 });
                 //
                 {
-                    disk_ref.aveq = myscan!(or, b" ", b"\n");
+                    sc.skip_spaces();
+                    disk_ref.aveq = sc.next_any(b" \n")?;
+                    if sc.last_delimiter() != b'\n' {
+                        sc.scan_until(b'\n')?;
+                    }
                 }
-                if sl[pos2] != b'\n' {
-                    let _ = myscan!(skip, b"\n");
-                }
-                let _ = pos1;
             }
             //
             idx += 1;
-            pos1 = pos2 + 1;
         }
         diskstats.disks.resize(idx, DiskStat::default());
         //

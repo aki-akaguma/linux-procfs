@@ -3,7 +3,7 @@
 // statm => https://elixir.bootlin.com/linux/v2.6.18/source/fs/proc/array.c#L476
 
 use crate::pidentries::PidStatm;
-use crate::util::{find_to_pos, FromBytes};
+use crate::scanner::ProcScanner;
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
@@ -14,36 +14,23 @@ impl PidStatmParser {
         if sl.is_empty() {
             return Ok(statm);
         }
-        //
-        let mut pos1: usize = 0;
-        let mut pos2: usize;
-        {
-            //
-            // content of statm
-            //   4319 435 401 121 0 1079 0
-            // on linux:
-            //      "%d %d %d %d %d %d %d\n"
-            //
-            macro_rules! myscan {
-                () => {{
-                    pos2 = {
-                        let haystack = &sl[pos1..];
-                        let needle = b" ";
-                        pos1 + find_to_pos(haystack, needle)
-                    };
-                    let s = &sl[pos1..pos2];
-                    pos1 = pos2 + 1;
-                    FromBytes::from_bytes(s)?
-                }};
-            }
-            statm.size = myscan!();
-            statm.resident = myscan!();
-            statm.share = myscan!();
-            statm.text = myscan!();
-            statm.lib = myscan!();
-            statm.data = myscan!();
-            let _ = pos1;
+
+        let mut sc = ProcScanner::new(sl);
+
+        statm.size = sc.next(b' ')?;
+        statm.resident = sc.next(b' ')?;
+        statm.share = sc.next(b' ')?;
+        statm.text = sc.next(b' ')?;
+        statm.lib = sc.next(b' ')?;
+        statm.data = sc.next(b' ')?;
+        
+        // Skip the 7th field (dt) if it exists
+        if sc.check(b' ') {
+            let _ = sc.scan_until(b' ');
+        } else {
+            let _ = sc.scan_until(b'\n');
         }
+
         Ok(statm)
     }
 }

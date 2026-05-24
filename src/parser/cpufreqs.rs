@@ -3,11 +3,8 @@
 // https://elixir.bootlin.com/linux/v2.6.18/source/drivers/cpufreq/cpufreq_stats.c#L83
 
 use crate::cpufreqs::TimeInState;
-use crate::util::{find_to_pos, FromBytes};
+use crate::scanner::{FromBytes, ProcScanner};
 use crate::ProcResult;
-
-#[allow(unused_imports)]
-use crate::util::find_to_opt;
 
 #[derive(Debug, Default, Clone)]
 pub struct CpuFreqMaxParser();
@@ -20,12 +17,12 @@ impl CpuFreqMaxParser {
         if sl.is_empty() {
             return Ok(0);
         }
-        let s = if sl.ends_with(b"\n") {
-            &sl[0..sl.len() - 1]
+        let mut sc = ProcScanner::new(sl);
+        if sc.check(b'\n') {
+            sc.next(b'\n')
         } else {
-            sl
-        };
-        FromBytes::from_bytes(s)
+            FromBytes::from_bytes(sl)
+        }
     }
 }
 
@@ -39,23 +36,9 @@ impl CpuFreqStatsTimeInStateParser {
             return Ok(time_in_states);
         }
         //
-        let mut pos1: usize = 0;
-        let mut pos2: usize;
-        let mut pos_end: usize;
+        let mut sc = ProcScanner::new(sl);
         let mut idx: usize = 0;
-        'tis_loop: loop {
-            if pos1 >= sl.len() {
-                break 'tis_loop;
-            }
-            //
-            let haystack = &sl[pos1..];
-            let needle = b"\n";
-            pos_end = pos1
-                + 1
-                + match find_to_opt(haystack, needle) {
-                    Some(pos) => pos,
-                    None => break 'tis_loop,
-                };
+        while !sc.is_empty() {
             //
             if idx >= time_in_states.len() {
                 time_in_states.resize(idx + 1, TimeInState::default());
@@ -71,40 +54,14 @@ impl CpuFreqStatsTimeInStateParser {
             // on linux:
             //   "%u %llu\n"
             //
-            macro_rules! myscan {
-                (check, $needle:expr) => {{
-                    {
-                        let haystack = &sl[pos1..pos_end];
-                        let needle = $needle;
-                        find_to_opt(haystack, needle).is_some()
-                    }
-                }};
-                (skip, $needle:expr) => {{
-                    pos2 = {
-                        let haystack = &sl[pos1..pos_end];
-                        let needle = $needle;
-                        pos1 + find_to_pos(haystack, needle)
-                    };
-                    let s = &sl[pos1..pos2];
-                    pos1 = pos2 + 1;
-                    s
-                }};
-                ($needle:expr) => {{
-                    let s = myscan!(skip, $needle);
-                    FromBytes::from_bytes(s)?
-                }};
-            }
-            //
-            if myscan!(check, b" ") {
-                tis_ref.step = myscan!(b" ");
-                tis_ref.value = myscan!(b"\n");
+            if sc.check(b' ') {
+                tis_ref.step = sc.next(b' ')?;
+                tis_ref.value = sc.next(b'\n')?;
             } else {
                 return Ok(vec![]);
             }
-            let _ = pos1;
             //
             idx += 1;
-            pos1 = pos2 + 1;
         }
         time_in_states.resize(idx, TimeInState::default());
         //

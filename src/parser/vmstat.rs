@@ -3,8 +3,7 @@
 // https://elixir.bootlin.com/linux/v2.6.18/source/mm/vmstat.c#L438
 // https://elixir.bootlin.com/linux/v2.6.26/source/mm/vmstat.c#L601
 
-use crate::error::ProcError;
-use crate::util::{find_to_opt, skip_to_opt, FromBytes};
+use crate::scanner::ProcScanner;
 use crate::vmstat::VmStat;
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
@@ -19,62 +18,20 @@ impl VmStatParser {
             return Ok(vmstat);
         }
         //
-        let mut pos1: usize = 0;
-        let mut pos2: usize;
+        let mut sc = ProcScanner::new(sl);
         //
-        macro_rules! myscan {
-            (check, $needle:expr) => {{
-                let haystack = &sl[pos1..];
-                let needle = $needle;
-                find_to_opt(haystack, needle).is_some()
-            }};
-            (skip_spaces) => {{
-                let haystack = &sl[pos1..];
-                match skip_to_opt(haystack, b' ') {
-                    Some(pos) => pos1 += pos,
-                    None => pos1 = sl.len(),
-                }
-            }};
-            (skip, $needle:expr) => {{
-                pos2 = {
-                    let haystack = &sl[pos1..];
-                    let needle = $needle;
-                    pos1 + find_to_opt(haystack, needle)
-                        .ok_or_else(|| ProcError::UnexpectedFormat("Delimiter not found".into()))?
-                };
-                let s = &sl[pos1..pos2];
-                pos1 = pos2 + 1;
-                s
-            }};
-            ($needle:expr) => {{
-                let s = myscan!(skip, $needle);
-                FromBytes::from_bytes(s)?
-            }};
-        }
         macro_rules! myscan_field {
             ($target:tt <= $needle:tt) => {{
-                let haystack = &sl[pos1..];
                 let needle = $needle;
-                let found_pos = find_to_opt(haystack, needle).ok_or_else(|| {
-                    ProcError::UnexpectedFormat(format!(
-                        "Field {} not found",
-                        std::str::from_utf8(needle).unwrap_or("?")
-                    ))
-                })?;
-                pos1 = pos1 + needle.len() + found_pos;
-                myscan!(skip_spaces);
-                vmstat.$target = myscan!(b"\n");
+                sc.find_and_jump(needle)?;
+                sc.skip_spaces();
+                vmstat.$target = sc.next(b'\n')?;
             }};
             ($target:tt <= ? $needle:tt) => {{
-                let haystack = &sl[pos1..];
                 let needle = $needle;
-                if myscan!(check, needle) {
-                    let found_pos = find_to_opt(haystack, needle).ok_or_else(|| {
-                        ProcError::UnexpectedFormat("Field not found after check".into())
-                    })?;
-                    pos1 = pos1 + needle.len() + found_pos;
-                    myscan!(skip_spaces);
-                    vmstat.$target = myscan!(b"\n");
+                if sc.find_and_jump_opt(needle) {
+                    sc.skip_spaces();
+                    vmstat.$target = sc.next(b'\n')?;
                 }
             }};
         }
@@ -88,12 +45,9 @@ impl VmStatParser {
         cfg_iif!(feature = "has_vmstat_nr_free_pages" {
             myscan_field!(nr_free_pages <=? b"nr_free_pages ");
         });
-        let pos1_bk = pos1;
         cfg_iif!(feature = "has_vmstat_nr_inactive" {
             myscan_field!(nr_inactive <=? b"nr_inactive ");
         });
-        let _ = pos1;
-        pos1 = pos1_bk;
         cfg_iif!(feature = "has_vmstat_nr_active" {
             myscan_field!(nr_active <=? b"nr_active ");
         });
@@ -108,7 +62,6 @@ impl VmStatParser {
             myscan_field!(nr_file_pages <=? b"nr_file_pages ");
         });
         //
-        let pos1_bk = pos1;
         cfg_iif!(feature = "has_vmstat_nr_slab" {
             myscan_field!(nr_slab <=? b"nr_slab ");
         });
@@ -122,8 +75,6 @@ impl VmStatParser {
         cfg_iif!(feature = "has_vmstat_nr_page_table_pages" {
             myscan_field!(nr_page_table_pages <=? b"nr_page_table_pages ");
         });
-        let _ = pos1;
-        pos1 = pos1_bk;
         cfg_iif!(feature = "has_vmstat_nr_dirty" {
             myscan_field!(nr_dirty <=? b"nr_dirty ");
         });
@@ -296,8 +247,6 @@ impl VmStatParser {
         cfg_iif!(feature = "has_vmstat_htlb_buddy_alloc" {
             myscan_field!(htlb_buddy_alloc_fail <=? b"htlb_buddy_alloc_fail ");
         });
-        //
-        let _ = pos1;
         //
         Ok(vmstat)
     }

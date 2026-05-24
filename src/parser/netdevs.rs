@@ -4,12 +4,9 @@
 
 use crate::netdevs::NetDev;
 use crate::netdevs::NetDevs;
-use crate::util::{find_to_pos, skip_to_pos, FromBytes};
+use crate::scanner::ProcScanner;
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
-
-#[allow(unused_imports)]
-use crate::util::find_to_opt;
 
 #[derive(Debug, Default, Clone)]
 pub struct NetDevsParser();
@@ -21,34 +18,15 @@ impl NetDevsParser {
             return Ok(netdevs);
         }
         //
-        let mut pos1: usize = 0;
-        let mut pos2: usize;
-        let mut pos_end: usize;
+        let mut sc = ProcScanner::new(sl);
         let mut idx: usize = 0;
         //
         // skip header 1
-        let haystack = &sl[pos1..];
-        let needle = b"\n";
-        pos2 = pos1 + find_to_pos(haystack, needle);
-        pos1 = pos2 + 1;
+        sc.scan_until(b'\n')?;
         // skip header 2
-        let haystack = &sl[pos1..];
-        let needle = b"\n";
-        pos2 = pos1 + find_to_pos(haystack, needle);
-        pos1 = pos2 + 1;
+        sc.scan_until(b'\n')?;
         //
-        'net_loop: loop {
-            if pos1 >= sl.len() {
-                break 'net_loop;
-            }
-            let haystack = &sl[pos1..];
-            let needle = b"\n";
-            pos_end = pos1
-                + 1
-                + match find_to_opt(haystack, needle) {
-                    Some(pos) => pos,
-                    None => break 'net_loop,
-                };
+        while !sc.is_empty() {
             //
             if idx >= netdevs.nets.len() {
                 netdevs.nets.resize(idx + 1, NetDev::default());
@@ -67,128 +45,105 @@ impl NetDevsParser {
                 //
                 // from https://elixir.bootlin.com/linux/v2.6.18/source/net/core/dev.c
                 //
-                macro_rules! myscan {
-                    (skip_spaces) => {
-                        pos1 += skip_to_pos(&sl[pos1..pos_end], b' ');
-                    };
-                    (skip, $needle:expr) => {{
-                        pos2 = {
-                            let haystack = &sl[pos1..pos_end];
-                            let needle = $needle;
-                            pos1 + find_to_pos(haystack, needle)
-                        };
-                        let s = &sl[pos1..pos2];
-                        pos1 = pos2 + 1;
-                        s
-                    }};
-                    ($needle:expr) => {{
-                        let s = myscan!(skip, $needle);
-                        FromBytes::from_bytes(s)?
-                    }};
-                }
+                sc.skip_spaces();
+                net_ref.name = sc.next(b':')?;
                 //
-                myscan!(skip_spaces);
-                net_ref.name = myscan!(b":");
-                //
-                if sl[pos1..pos_end].starts_with(b" No statistics available.") {
-                    myscan!(skip, b"\n");
-                    let _ = pos1;
+                if sc.check(b'N') {
+                    sc.scan_until(b'\n')?;
                 } else {
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     {
-                        net_ref.rx_bytes = myscan!(b" ");
+                        net_ref.rx_bytes = sc.next(b' ')?;
                     }
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     {
-                        net_ref.rx_packets = myscan!(b" ");
+                        net_ref.rx_packets = sc.next(b' ')?;
                     }
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_errors" {
-                        net_ref.rx_errors = myscan!(b" ");
+                        net_ref.rx_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_dropped_errors" {
-                        net_ref.rx_dropped_errors = myscan!(b" ");
+                        net_ref.rx_dropped_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_fifo_errors" {
-                        net_ref.rx_fifo_errors = myscan!(b" ");
+                        net_ref.rx_fifo_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_frame_errors" {
-                        net_ref.rx_frame_errors = myscan!(b" ");
+                        net_ref.rx_frame_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_compressed" {
-                        net_ref.rx_compressed = myscan!(b" ");
+                        net_ref.rx_compressed = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_rx_multicast" {
-                        net_ref.rx_multicast = myscan!(b" ");
+                        net_ref.rx_multicast = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
                     //
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     {
-                        net_ref.tx_bytes = myscan!(b" ");
+                        net_ref.tx_bytes = sc.next(b' ')?;
                     }
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     {
-                        net_ref.tx_packets = myscan!(b" ");
+                        net_ref.tx_packets = sc.next(b' ')?;
                     }
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_errors" {
-                        net_ref.tx_errors = myscan!(b" ");
+                        net_ref.tx_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_dropped_errors" {
-                        net_ref.tx_dropped_errors = myscan!(b" ");
+                        net_ref.tx_dropped_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_fifo_errors" {
-                        net_ref.tx_fifo_errors = myscan!(b" ");
+                        net_ref.tx_fifo_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_collisions" {
-                        net_ref.tx_collisions = myscan!(b" ");
+                        net_ref.tx_collisions = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_carrier_errors" {
-                        net_ref.tx_carrier_errors = myscan!(b" ");
+                        net_ref.tx_carrier_errors = sc.next(b' ')?;
                     } else {
-                        myscan!(skip, b" ");
+                        sc.scan_until(b' ')?;
                     });
-                    myscan!(skip_spaces);
+                    sc.skip_spaces();
                     cfg_iif!(feature = "has_netdevs_tx_compressed" {
-                        net_ref.tx_compressed = myscan!(b"\n");
+                        net_ref.tx_compressed = sc.next(b'\n')?;
                     } else {
-                        myscan!(skip, b"\n");
+                        sc.scan_until(b'\n')?;
                     });
-                    let _ = pos1;
                 }
             }
             //
             idx += 1;
-            pos1 = pos2 + 1;
         }
         netdevs.nets.resize(idx, NetDev::default());
         //

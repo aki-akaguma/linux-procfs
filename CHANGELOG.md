@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `SystemConfig` struct to allow customizing buffer capacities.
 * `System::with_config` method to initialize `System` with a custom configuration.
 * Constants for all default buffer capacities (e.g., `DEFAULT_CAPACITY_STAT`).
-* `FromBytes` trait in `src/util.rs` for optimized, allocation-free parsing.
+* `FromBytes` trait and `ProcScanner` struct in `src/scanner.rs` for optimized, allocation-free, and unified parsing.
 
 ### Changed
 * `cargo test --tests` in `.github/workflows/test-macos.yml`
