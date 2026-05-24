@@ -56,10 +56,65 @@ pub use crate::error::{ProcError, ProcResult};
 
 pub type Pid = i32;
 
+pub const DEFAULT_CAPACITY_LOADAVG: usize = 40;
+pub const DEFAULT_CAPACITY_MEMINFO: usize = 1300;
+pub const DEFAULT_CAPACITY_STAT: usize = 1500;
+pub const DEFAULT_CAPACITY_UPTIME: usize = 50;
+pub const DEFAULT_CAPACITY_VMSTAT: usize = 1500;
+pub const DEFAULT_CAPACITY_DISKSTATS: usize = 1000;
+pub const DEFAULT_CAPACITY_NETDEVS: usize = 1000;
+pub const DEFAULT_CAPACITY_PID_STAT: usize = 400;
+pub const DEFAULT_CAPACITY_PID_STATM: usize = 40;
+pub const DEFAULT_CAPACITY_PID_STATUS: usize = 1100;
+pub const DEFAULT_CAPACITY_PID_CMDLINE: usize = 600;
+pub const DEFAULT_CAPACITY_PID_COMM: usize = 600;
+pub const DEFAULT_CAPACITY_CPUFREQ: usize = 20;
+pub const DEFAULT_CAPACITY_CPUFREQ_STATS: usize = 100;
+
+#[derive(Debug, Clone)]
+pub struct SystemConfig {
+    pub loadavg_cap: usize,
+    pub meminfo_cap: usize,
+    pub stat_cap: usize,
+    pub uptime_cap: usize,
+    pub vmstat_cap: usize,
+    pub diskstats_cap: usize,
+    pub netdevs_cap: usize,
+    pub pid_stat_cap: usize,
+    pub pid_statm_cap: usize,
+    pub pid_status_cap: usize,
+    pub pid_cmdline_cap: usize,
+    pub pid_comm_cap: usize,
+    pub cpufreq_cap: usize,
+    pub cpufreq_stats_cap: usize,
+}
+
+impl Default for SystemConfig {
+    fn default() -> Self {
+        Self {
+            loadavg_cap: DEFAULT_CAPACITY_LOADAVG,
+            meminfo_cap: DEFAULT_CAPACITY_MEMINFO,
+            stat_cap: DEFAULT_CAPACITY_STAT,
+            uptime_cap: DEFAULT_CAPACITY_UPTIME,
+            vmstat_cap: DEFAULT_CAPACITY_VMSTAT,
+            diskstats_cap: DEFAULT_CAPACITY_DISKSTATS,
+            netdevs_cap: DEFAULT_CAPACITY_NETDEVS,
+            pid_stat_cap: DEFAULT_CAPACITY_PID_STAT,
+            pid_statm_cap: DEFAULT_CAPACITY_PID_STATM,
+            pid_status_cap: DEFAULT_CAPACITY_PID_STATUS,
+            pid_cmdline_cap: DEFAULT_CAPACITY_PID_CMDLINE,
+            pid_comm_cap: DEFAULT_CAPACITY_PID_COMM,
+            cpufreq_cap: DEFAULT_CAPACITY_CPUFREQ,
+            cpufreq_stats_cap: DEFAULT_CAPACITY_CPUFREQ_STATS,
+        }
+    }
+}
+
 /// system interface of linux-procfs
 pub struct System {
     base_path: PathBuf,
     fb: util::FileBuffer,
+    config: SystemConfig,
 }
 
 use std::fs;
@@ -74,79 +129,84 @@ impl System {
     ///let mut sys = System::new("/");
     /// ```
     pub fn new<P: AsRef<Path>>(base_path: P) -> Self {
+        Self::with_config(base_path, SystemConfig::default())
+    }
+
+    pub fn with_config<P: AsRef<Path>>(base_path: P, config: SystemConfig) -> Self {
         Self {
             base_path: base_path.as_ref().to_path_buf(),
             fb: util::FileBuffer::new(),
+            config,
         }
     }
     //
     /// `/proc/loadavg`
     pub fn get_loadavg(&mut self) -> ProcResult<loadavg::LoadAvg> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 40,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.loadavg_cap,
             name: "loadavg",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::loadavg::LoadAvgParser::default().parse(slice)
     }
     //
     /// `/proc/meminfo`
     pub fn get_meminfo(&mut self) -> ProcResult<meminfo::MemInfo> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 1300,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.meminfo_cap,
             name: "meminfo",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::meminfo::MemInfoParser::default().parse(slice)
     }
     //
     /// `/proc/stat`
     pub fn get_stat(&mut self) -> ProcResult<stat::Stat> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 1500,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.stat_cap,
             name: "stat",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::stat::StatParser::default().parse(slice)
     }
     //
     /// `/proc/uptime`
     pub fn get_uptime(&mut self) -> ProcResult<uptime::Uptime> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 50,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.uptime_cap,
             name: "uptime",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::uptime::UptimeParser::default().parse(slice)
     }
     //
     /// `/proc/vmstat`
     pub fn get_vmstat(&mut self) -> ProcResult<vmstat::VmStat> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 1500,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.vmstat_cap,
             name: "vmstat",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::vmstat::VmStatParser::default().parse(slice)
     }
     //
     /// `/proc/diskstats`
     pub fn get_diskstats(&mut self) -> ProcResult<diskstats::DiskStats> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 1000,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.diskstats_cap,
             name: "diskstats",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::diskstats::DiskStatsParser::default().parse(slice)
     }
     //
     /// `/proc/net/dev`
     pub fn get_netdevs(&mut self) -> ProcResult<netdevs::NetDevs> {
-        static PROC_FB: util::ProcFb = util::ProcFb {
-            capacity: 1000,
+        let proc_fb = util::ProcFb {
+            capacity: self.config.netdevs_cap,
             name: "net/dev",
         };
-        let slice = PROC_FB.try_update(&self.base_path, &mut self.fb)?;
+        let slice = proc_fb.try_update(&self.base_path, &mut self.fb)?;
         parser::netdevs::NetDevsParser::default().parse(slice)
     }
     //
@@ -176,16 +236,16 @@ impl System {
     //
     /// `/sys/devices/system/cpu/cpu*/cpufreq/`
     pub fn get_cpufreqs(&mut self, max_cpu_num: usize) -> ProcResult<cpufreqs::CpuFreqs> {
-        static SYS_CPUFREQ_CUR: util::SysCpuFb = util::SysCpuFb {
-            capacity: 20,
+        let sys_cpufreq_cur = util::SysCpuFb {
+            capacity: self.config.cpufreq_cap,
             name: "cpufreq/cpuinfo_cur_freq",
         };
-        static SYS_CPUFREQ_MAX: util::SysCpuFb = util::SysCpuFb {
-            capacity: 20,
+        let sys_cpufreq_max = util::SysCpuFb {
+            capacity: self.config.cpufreq_cap,
             name: "cpufreq/cpuinfo_max_freq",
         };
-        static SYS_CPUFREQ_STATS_TIME_IN_STATE: util::SysCpuFb = util::SysCpuFb {
-            capacity: 100,
+        let sys_cpufreq_stats_time_in_state = util::SysCpuFb {
+            capacity: self.config.cpufreq_stats_cap,
             name: "cpufreq/stats/time_in_state",
         };
         //
@@ -196,21 +256,29 @@ impl System {
         for idx in 0..max_cpu_num {
             let cpufreq = &mut cpufreqs.cpufreqs[idx];
             cpufreq.cur = {
-                let slice = match SYS_CPUFREQ_CUR.try_update_with_cpu_num(&self.base_path, &mut self.fb, idx) {
+                let slice = match sys_cpufreq_cur.try_update_with_cpu_num(
+                    &self.base_path,
+                    &mut self.fb,
+                    idx,
+                ) {
                     Ok(s) => s,
                     Err(_) => &[],
                 };
                 parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)?
             };
             cpufreq.max = {
-                let slice = match SYS_CPUFREQ_MAX.try_update_with_cpu_num(&self.base_path, &mut self.fb, idx) {
+                let slice = match sys_cpufreq_max.try_update_with_cpu_num(
+                    &self.base_path,
+                    &mut self.fb,
+                    idx,
+                ) {
                     Ok(s) => s,
                     Err(_) => &[],
                 };
                 parser::cpufreqs::CpuFreqMaxParser::default().parse(slice)?
             };
             cpufreq.time_in_states = {
-                let slice = match SYS_CPUFREQ_STATS_TIME_IN_STATE.try_update_with_cpu_num(
+                let slice = match sys_cpufreq_stats_time_in_state.try_update_with_cpu_num(
                     &self.base_path,
                     &mut self.fb,
                     idx,
@@ -279,16 +347,18 @@ impl System {
     //
     /// `/proc/<pid>/stat`
     pub fn get_pidentry_stat(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStat>> {
-        static PIDPROCS_STAT: util::PidFb = util::PidFb {
-            capacity: 400,
+        let pidprocs_stat = util::PidFb {
+            capacity: self.config.pid_stat_cap,
             name: "stat",
         };
-        let slice = match PIDPROCS_STAT.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+        let slice = match pidprocs_stat.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
             Ok(s) => s,
             Err(_) => return Ok(None),
         };
         if !slice.is_empty() {
-            Ok(Some(parser::pidstat::PidStatParser::default().parse(slice)?))
+            Ok(Some(
+                parser::pidstat::PidStatParser::default().parse(slice)?,
+            ))
         } else {
             Ok(None)
         }
@@ -296,11 +366,11 @@ impl System {
     //
     /// `/proc/<pid>/statm`
     pub fn get_pidentry_statm(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStatm>> {
-        static PIDPROCS_STATM: util::PidFb = util::PidFb {
-            capacity: 40,
+        let pidprocs_statm = util::PidFb {
+            capacity: self.config.pid_statm_cap,
             name: "statm",
         };
-        let slice = match PIDPROCS_STATM.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+        let slice = match pidprocs_statm.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
             Ok(s) => s,
             Err(_) => return Ok(None),
         };
@@ -315,11 +385,11 @@ impl System {
     //
     /// `/proc/<pid>/status`
     pub fn get_pidentry_status(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidStatus>> {
-        static PIDPROCS_STATUS: util::PidFb = util::PidFb {
-            capacity: 1100,
+        let pidprocs_status = util::PidFb {
+            capacity: self.config.pid_status_cap,
             name: "status",
         };
-        let slice = match PIDPROCS_STATUS.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+        let slice = match pidprocs_status.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
             Ok(s) => s,
             Err(_) => return Ok(None),
         };
@@ -334,11 +404,11 @@ impl System {
     //
     /// `/proc/<pid>/cmdline`
     pub fn get_pidentry_cmdline(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidCmdline>> {
-        static PIDPROCS_CMDLINE: util::PidFb = util::PidFb {
-            capacity: 600,
+        let pidprocs_cmdline = util::PidFb {
+            capacity: self.config.pid_cmdline_cap,
             name: "cmdline",
         };
-        let slice = match PIDPROCS_CMDLINE.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+        let slice = match pidprocs_cmdline.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
             Ok(s) => s,
             Err(_) => return Ok(None),
         };
@@ -353,11 +423,11 @@ impl System {
     //
     /// `/proc/<pid>/comm`
     pub fn get_pidentry_comm(&mut self, pid: Pid) -> ProcResult<Option<pidentries::PidCmdline>> {
-        static PIDPROCS_COMM: util::PidFb = util::PidFb {
-            capacity: 600,
+        let pidprocs_comm = util::PidFb {
+            capacity: self.config.pid_comm_cap,
             name: "comm",
         };
-        let slice = match PIDPROCS_COMM.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
+        let slice = match pidprocs_comm.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
             Ok(s) => s,
             Err(_) => return Ok(None),
         };

@@ -3,10 +3,10 @@
 // https://elixir.bootlin.com/linux/v2.6.18/source/mm/vmstat.c#L438
 // https://elixir.bootlin.com/linux/v2.6.26/source/mm/vmstat.c#L601
 
+use crate::error::ProcError;
 use crate::util::{find_to_opt, skip_to_opt};
 use crate::vmstat::VmStat;
 use crate::ProcResult;
-use crate::error::ProcError;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
@@ -49,15 +49,22 @@ impl VmStatParser {
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
                 let input = std::str::from_utf8(s)?;
-                input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                input
+                    .trim()
+                    .parse()
+                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
             }};
         }
         macro_rules! myscan_field {
             ($target:tt <= $needle:tt) => {{
                 let haystack = &sl[pos1..];
                 let needle = $needle;
-                let found_pos = find_to_opt(haystack, needle)
-                    .ok_or_else(|| ProcError::UnexpectedFormat(format!("Field {} not found", std::str::from_utf8(needle).unwrap_or("?"))))?;
+                let found_pos = find_to_opt(haystack, needle).ok_or_else(|| {
+                    ProcError::UnexpectedFormat(format!(
+                        "Field {} not found",
+                        std::str::from_utf8(needle).unwrap_or("?")
+                    ))
+                })?;
                 pos1 = pos1 + needle.len() + found_pos;
                 myscan!(skip_spaces);
                 vmstat.$target = myscan!(b"\n");
@@ -66,7 +73,9 @@ impl VmStatParser {
                 let haystack = &sl[pos1..];
                 let needle = $needle;
                 if myscan!(check, needle) {
-                    let found_pos = find_to_opt(haystack, needle).ok_or_else(|| ProcError::UnexpectedFormat("Field not found after check".into()))?;
+                    let found_pos = find_to_opt(haystack, needle).ok_or_else(|| {
+                        ProcError::UnexpectedFormat("Field not found after check".into())
+                    })?;
                     pos1 = pos1 + needle.len() + found_pos;
                     myscan!(skip_spaces);
                     vmstat.$target = myscan!(b"\n");

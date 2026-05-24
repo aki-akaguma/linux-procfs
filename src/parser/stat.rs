@@ -1,8 +1,8 @@
+use crate::error::ProcError;
 use crate::stat::Cpu;
 use crate::stat::Stat;
 use crate::util::find_to_opt;
 use crate::ProcResult;
-use crate::error::ProcError;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
@@ -40,8 +40,9 @@ impl StatParser {
             let needle = b"\n";
             pos_end = pos1
                 + 1
-                + find_to_opt(haystack, needle)
-                    .ok_or_else(|| ProcError::UnexpectedFormat("Newline not found after cpu line".into()))?;
+                + find_to_opt(haystack, needle).ok_or_else(|| {
+                    ProcError::UnexpectedFormat("Newline not found after cpu line".into())
+                })?;
         }
         macro_rules! myscan {
             (check, $needle:expr) => {{
@@ -63,7 +64,10 @@ impl StatParser {
             ($needle:expr) => {{
                 let s = myscan!(skip, $needle);
                 let input = std::str::from_utf8(s)?;
-                input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                input
+                    .trim()
+                    .parse()
+                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
             }};
         }
         {
@@ -134,7 +138,9 @@ impl StatParser {
             if idx >= stat.cpus.len() {
                 stat.cpus.resize(idx + 1, Cpu::default());
             }
-            let cpu_ref: &mut Cpu = stat.cpus.get_mut(idx)
+            let cpu_ref: &mut Cpu = stat
+                .cpus
+                .get_mut(idx)
                 .ok_or_else(|| ProcError::UnexpectedFormat("Failed to get CPU mut ref".into()))?;
             //
             cpu_ref.name = format!("cpu{idx}");
@@ -185,7 +191,10 @@ impl StatParser {
             ($needle:expr) => {{
                 let s = myscan2!(skip, $needle);
                 let input = std::str::from_utf8(s)?;
-                input.trim().parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                input
+                    .trim()
+                    .parse()
+                    .map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
             }};
         }
         //

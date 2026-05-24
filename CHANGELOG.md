@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * Custom error type `ProcError` and result alias `ProcResult` in `src/error.rs`.
 * Fallible update methods (`try_update`, `try_update_with_pid`, etc.) in `util`.
+* `SystemConfig` struct to allow customizing buffer capacities.
+* `System::with_config` method to initialize `System` with a custom configuration.
+* Constants for all default buffer capacities (e.g., `DEFAULT_CAPACITY_STAT`).
 
 ### Changed
 * `cargo test --tests` in `.github/workflows/test-macos.yml`
@@ -16,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Refactored all parsers to propagate errors using `?` instead of panicking with `unwrap()` or `unreachable!()`.
 * Updated path handling to use `PathBuf` joining for better reliability on non-UTF-8 paths.
 * Updated integration tests and documentation examples to accommodate the new fallible API.
+* Refactored `System` methods to use dynamic capacities from `SystemConfig` instead of hardcoded magic numbers.
 
 
 ## [0.3.17] (2025-09-25)

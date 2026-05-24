@@ -1,7 +1,7 @@
+use crate::error::ProcError;
 use crate::loadavg::LoadAvg;
 use crate::util::find_to_opt;
 use crate::ProcResult;
-use crate::error::ProcError;
 
 #[derive(Debug, Default, Clone)]
 pub struct LoadAvgParser();
@@ -21,8 +21,9 @@ impl LoadAvgParser {
                     pos2 = {
                         let haystack = &sl[pos1..];
                         let needle = $needle;
-                        pos1 + find_to_opt(haystack, needle)
-                            .ok_or_else(|| ProcError::UnexpectedFormat("Delimiter not found".into()))?
+                        pos1 + find_to_opt(haystack, needle).ok_or_else(|| {
+                            ProcError::UnexpectedFormat("Delimiter not found".into())
+                        })?
                     };
                     let s = &sl[pos1..pos2];
                     pos1 = pos2 + 1;
@@ -31,7 +32,9 @@ impl LoadAvgParser {
                 ($needle:expr) => {{
                     let s = try_scan!(skip, $needle);
                     let input = std::str::from_utf8(s)?;
-                    input.parse().map_err(|_| ProcError::UnexpectedFormat(format!("Parse error: {}", input)))?
+                    input.parse().map_err(|_| {
+                        ProcError::UnexpectedFormat(format!("Parse error: {}", input))
+                    })?
                 }};
             }
             // content of /proc/loadavg

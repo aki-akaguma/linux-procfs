@@ -1,7 +1,7 @@
 use std::fmt;
+use std::io;
 use std::num::{ParseFloatError, ParseIntError};
 use std::str::Utf8Error;
-use std::io;
 
 #[derive(Debug)]
 pub enum ProcError {
