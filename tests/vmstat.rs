@@ -42,6 +42,8 @@ fn test_vmstat_intel() {
     assert_eq!(vmstat.nr_mapped, 147609);
     #[cfg(feature = "has_vmstat_nr_file_pages")]
     assert_eq!(vmstat.nr_file_pages, 562927);
+    #[cfg(feature = "has_vmstat_nr_dirty")]
+    assert_eq!(vmstat.nr_dirty, 402);
     //
     #[cfg(feature = "has_vmstat_nr_slab")]
     assert_eq!(vmstat.nr_slab, 0);
@@ -52,8 +54,6 @@ fn test_vmstat_intel() {
     //
     #[cfg(feature = "has_vmstat_nr_page_table_pages")]
     assert_eq!(vmstat.nr_page_table_pages, 21037);
-    #[cfg(feature = "has_vmstat_nr_dirty")]
-    assert_eq!(vmstat.nr_dirty, 402);
     #[cfg(feature = "has_vmstat_nr_writeback")]
     assert_eq!(vmstat.nr_writeback, 0);
     #[cfg(feature = "has_vmstat_nr_unstable")]
@@ -192,6 +192,8 @@ fn test_vmstat_amd() {
     assert_eq!(vmstat.nr_mapped, 7057);
     #[cfg(feature = "has_vmstat_nr_file_pages")]
     assert_eq!(vmstat.nr_file_pages, 460914);
+    #[cfg(feature = "has_vmstat_nr_dirty")]
+    assert_eq!(vmstat.nr_dirty, 27);
     //
     #[cfg(feature = "has_vmstat_nr_slab")]
     assert_eq!(vmstat.nr_slab, 0);
@@ -202,8 +204,6 @@ fn test_vmstat_amd() {
     //
     #[cfg(feature = "has_vmstat_nr_page_table_pages")]
     assert_eq!(vmstat.nr_page_table_pages, 6725);
-    #[cfg(feature = "has_vmstat_nr_dirty")]
-    assert_eq!(vmstat.nr_dirty, 27);
     #[cfg(feature = "has_vmstat_nr_writeback")]
     assert_eq!(vmstat.nr_writeback, 0);
     #[cfg(feature = "has_vmstat_nr_unstable")]
@@ -342,6 +342,8 @@ fn test_vmstat_5_4() {
     assert_eq!(vmstat.nr_mapped, 37955);
     #[cfg(feature = "has_vmstat_nr_file_pages")]
     assert_eq!(vmstat.nr_file_pages, 118781);
+    #[cfg(feature = "has_vmstat_nr_dirty")]
+    assert_eq!(vmstat.nr_dirty, 610);
     //
     #[cfg(feature = "has_vmstat_nr_slab")]
     assert_eq!(vmstat.nr_slab, 0);
@@ -352,8 +354,6 @@ fn test_vmstat_5_4() {
     //
     #[cfg(feature = "has_vmstat_nr_page_table_pages")]
     assert_eq!(vmstat.nr_page_table_pages, 0);
-    #[cfg(feature = "has_vmstat_nr_dirty")]
-    assert_eq!(vmstat.nr_dirty, 610);
     #[cfg(feature = "has_vmstat_nr_writeback")]
     assert_eq!(vmstat.nr_writeback, 0);
     #[cfg(feature = "has_vmstat_nr_unstable")]
@@ -492,6 +492,8 @@ fn test_vmstat_5_4_intel() {
     assert_eq!(vmstat.nr_mapped, 166697);
     #[cfg(feature = "has_vmstat_nr_file_pages")]
     assert_eq!(vmstat.nr_file_pages, 692737);
+    #[cfg(feature = "has_vmstat_nr_dirty")]
+    assert_eq!(vmstat.nr_dirty, 3860);
     //
     #[cfg(feature = "has_vmstat_nr_slab")]
     assert_eq!(vmstat.nr_slab, 0);
@@ -502,8 +504,6 @@ fn test_vmstat_5_4_intel() {
     //
     #[cfg(feature = "has_vmstat_nr_page_table_pages")]
     assert_eq!(vmstat.nr_page_table_pages, 0);
-    #[cfg(feature = "has_vmstat_nr_dirty")]
-    assert_eq!(vmstat.nr_dirty, 3860);
     #[cfg(feature = "has_vmstat_nr_writeback")]
     assert_eq!(vmstat.nr_writeback, 0);
     #[cfg(feature = "has_vmstat_nr_unstable")]

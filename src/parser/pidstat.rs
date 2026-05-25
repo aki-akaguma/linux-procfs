@@ -7,6 +7,9 @@ use crate::scanner::ProcScanner;
 use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
+#[cfg(feature = "has_pidentry_stat_comm")]
+use crate::scanner::FromBytes;
+
 #[derive(Debug, Default, Clone)]
 pub(crate) struct PidStatParser();
 impl PidStatParser {

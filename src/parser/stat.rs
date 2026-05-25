@@ -52,7 +52,7 @@ impl StatParser {
                 // up to here, on linux vx.x.x
                 } else {
                     stat.cpu.guest_nice = sc.next(b' ')?;
-                    if sc.check(b' ') {
+                    if !sc.check(b' ') {
                         cfg_iif!(feature = "has_stat_cguest" {
                             stat.cpu.cguest = sc.next(b'\n')?;
                         } else {

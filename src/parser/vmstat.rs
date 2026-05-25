@@ -61,6 +61,9 @@ impl VmStatParser {
         cfg_iif!(feature = "has_vmstat_nr_file_pages" {
             myscan_field!(nr_file_pages <=? b"nr_file_pages ");
         });
+        cfg_iif!(feature = "has_vmstat_nr_dirty" {
+            myscan_field!(nr_dirty <=? b"nr_dirty ");
+        });
         //
         cfg_iif!(feature = "has_vmstat_nr_slab" {
             myscan_field!(nr_slab <=? b"nr_slab ");
@@ -74,9 +77,6 @@ impl VmStatParser {
         //
         cfg_iif!(feature = "has_vmstat_nr_page_table_pages" {
             myscan_field!(nr_page_table_pages <=? b"nr_page_table_pages ");
-        });
-        cfg_iif!(feature = "has_vmstat_nr_dirty" {
-            myscan_field!(nr_dirty <=? b"nr_dirty ");
         });
         //
         cfg_iif!(feature = "has_vmstat_nr_writeback" {

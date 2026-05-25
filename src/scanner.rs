@@ -99,6 +99,7 @@ impl FromBytes for String {
     }
 }
 
+#[derive(Debug)]
 pub(crate) struct ProcScanner<'a> {
     slice: &'a [u8],
     cursor: usize,
