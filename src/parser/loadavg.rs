@@ -3,7 +3,7 @@ use crate::scanner::ProcScanner;
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
-pub struct LoadAvgParser();
+pub(crate) struct LoadAvgParser();
 
 impl LoadAvgParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<LoadAvg> {

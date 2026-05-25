@@ -4,7 +4,7 @@ use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
-pub struct MemInfoParser();
+pub(crate) struct MemInfoParser();
 
 impl MemInfoParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<MemInfo> {

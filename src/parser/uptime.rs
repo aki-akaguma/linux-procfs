@@ -3,7 +3,7 @@ use crate::uptime::Uptime;
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
-pub struct UptimeParser();
+pub(crate) struct UptimeParser();
 
 impl UptimeParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<Uptime> {

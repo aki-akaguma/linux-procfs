@@ -48,7 +48,7 @@ pub mod cpufreqs;
 pub mod pidentries;
 
 pub mod error;
-pub mod scanner;
+mod scanner;
 
 mod parser;
 mod util;

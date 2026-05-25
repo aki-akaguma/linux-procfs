@@ -6,7 +6,7 @@ use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
-pub struct StatParser {
+pub(crate) struct StatParser {
     cpus_cap: usize,
 }
 

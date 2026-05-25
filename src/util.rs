@@ -8,26 +8,26 @@ use std::path::Path;
 
 use super::Pid;
 
-pub struct FileBuffer {
+pub(crate) struct FileBuffer {
     pub buffer: Vec<u8>,
 }
 
 impl FileBuffer {
-    pub fn new() -> Self {
+    pub(crate) fn new() -> Self {
         Self {
             buffer: Vec::with_capacity(3000),
         }
     }
-    pub fn least_capacity(&mut self, n: usize) {
+    pub(crate) fn least_capacity(&mut self, n: usize) {
         if self.buffer.capacity() < n {
             self.buffer.clear();
             self.buffer.reserve(n);
         }
     }
-    pub fn clear(&mut self) {
+    pub(crate) fn clear(&mut self) {
         self.buffer.clear();
     }
-    pub fn read_from_file(&mut self, file_handle: &mut fs::File) -> io::Result<usize> {
+    pub(crate) fn read_from_file(&mut self, file_handle: &mut fs::File) -> io::Result<usize> {
         self.buffer.clear();
         #[cfg(not(windows))]
         {
@@ -51,13 +51,17 @@ impl Default for FileBuffer {
         Self::new()
     }
 }
-pub struct ProcFb {
+pub(crate) struct ProcFb {
     pub name: &'static str,
     pub capacity: usize,
 }
 
 impl ProcFb {
-    pub fn try_update<'a>(&self, base_path: &Path, fb: &'a mut FileBuffer) -> io::Result<&'a [u8]> {
+    pub(crate) fn try_update<'a>(
+        &self,
+        base_path: &Path,
+        fb: &'a mut FileBuffer,
+    ) -> io::Result<&'a [u8]> {
         fb.clear();
         fb.least_capacity(self.capacity);
         {
@@ -69,13 +73,13 @@ impl ProcFb {
     }
 }
 
-pub struct PidFb {
+pub(crate) struct PidFb {
     pub name: &'static str,
     pub capacity: usize,
 }
 
 impl PidFb {
-    pub fn try_update_with_pid<'a>(
+    pub(crate) fn try_update_with_pid<'a>(
         &self,
         base_path: &Path,
         fb: &'a mut FileBuffer,
@@ -92,13 +96,13 @@ impl PidFb {
     }
 }
 
-pub struct SysCpuFb {
+pub(crate) struct SysCpuFb {
     pub name: &'static str,
     pub capacity: usize,
 }
 
 impl SysCpuFb {
-    pub fn try_update_with_cpu_num<'a>(
+    pub(crate) fn try_update_with_cpu_num<'a>(
         &self,
         base_path: &Path,
         fb: &'a mut FileBuffer,
@@ -122,10 +126,10 @@ impl SysCpuFb {
     }
 }
 
-pub fn find_to_opt(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+pub(crate) fn find_to_opt(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     string_search_bytes(haystack, needle)
 }
 
-pub fn skip_to_opt(buffer: &[u8], byte: u8) -> Option<usize> {
+pub(crate) fn skip_to_opt(buffer: &[u8], byte: u8) -> Option<usize> {
     memnechr(buffer, byte)
 }

@@ -1,7 +1,7 @@
 use crate::error::{ProcError, ProcResult};
 use crate::util::{find_to_opt, skip_to_opt};
 
-pub trait FromBytes: Sized {
+pub(crate) trait FromBytes: Sized {
     fn from_bytes(bytes: &[u8]) -> ProcResult<Self>;
 }
 

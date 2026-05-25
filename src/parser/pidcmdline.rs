@@ -7,7 +7,7 @@ use crate::scanner::ProcScanner;
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
-pub struct PidCmdlineParser();
+pub(crate) struct PidCmdlineParser();
 impl PidCmdlineParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidCmdline> {
         let mut cmdline = PidCmdline::default();

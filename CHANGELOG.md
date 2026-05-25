@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Updated integration tests and documentation examples to accommodate the new fallible API.
 * Refactored `System` methods to use dynamic capacities from `SystemConfig` instead of hardcoded magic numbers.
 * Optimized all parsers to use direct byte-to-number parsing via `FromBytes`, eliminating intermediate `String` and `Cow<str>` allocations.
+* Hardened encapsulation by making internal components (`ProcScanner`, `FileBuffer`, all parser structs, and internal search utilities) `pub(crate)`.
+* Restricted visibility of `scanner` and `parser` internal submodules.
 
 
 

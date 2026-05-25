@@ -9,7 +9,7 @@ use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
-pub struct PidStatusParser();
+pub(crate) struct PidStatusParser();
 impl PidStatusParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidStatus> {
         let mut status = PidStatus::default();

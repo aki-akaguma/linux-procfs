@@ -1,15 +1,15 @@
-pub mod loadavg;
-pub mod meminfo;
-pub mod stat;
-pub mod uptime;
-pub mod vmstat;
+pub(crate) mod loadavg;
+pub(crate) mod meminfo;
+pub(crate) mod stat;
+pub(crate) mod uptime;
+pub(crate) mod vmstat;
 
-pub mod diskstats;
-pub mod netdevs;
+pub(crate) mod diskstats;
+pub(crate) mod netdevs;
 
-pub mod cpufreqs;
+pub(crate) mod cpufreqs;
 
-pub mod pidcmdline;
-pub mod pidstat;
-pub mod pidstatm;
-pub mod pidstatus;
+pub(crate) mod pidcmdline;
+pub(crate) mod pidstat;
+pub(crate) mod pidstatm;
+pub(crate) mod pidstatus;

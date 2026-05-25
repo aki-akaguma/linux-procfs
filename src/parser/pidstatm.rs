@@ -7,7 +7,7 @@ use crate::scanner::ProcScanner;
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
-pub struct PidStatmParser();
+pub(crate) struct PidStatmParser();
 impl PidStatmParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<PidStatm> {
         let mut statm = PidStatm::default();

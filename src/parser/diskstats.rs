@@ -9,7 +9,7 @@ use crate::ProcResult;
 use cfg_iif::cfg_iif;
 
 #[derive(Debug, Default, Clone)]
-pub struct DiskStatsParser();
+pub(crate) struct DiskStatsParser();
 
 impl DiskStatsParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<DiskStats> {

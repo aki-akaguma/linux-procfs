@@ -7,7 +7,7 @@ use crate::scanner::{FromBytes, ProcScanner};
 use crate::ProcResult;
 
 #[derive(Debug, Default, Clone)]
-pub struct CpuFreqMaxParser();
+pub(crate) struct CpuFreqMaxParser();
 
 impl CpuFreqMaxParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<u32> {
@@ -27,7 +27,7 @@ impl CpuFreqMaxParser {
 }
 
 #[derive(Debug, Default, Clone)]
-pub struct CpuFreqStatsTimeInStateParser();
+pub(crate) struct CpuFreqStatsTimeInStateParser();
 
 impl CpuFreqStatsTimeInStateParser {
     pub fn parse(&mut self, sl: &[u8]) -> ProcResult<Vec<TimeInState>> {
