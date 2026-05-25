@@ -99,7 +99,7 @@ impl FromBytes for String {
     }
 }
 
-pub struct ProcScanner<'a> {
+pub(crate) struct ProcScanner<'a> {
     slice: &'a [u8],
     cursor: usize,
 }
@@ -127,7 +127,7 @@ impl<'a> ProcScanner<'a> {
     }
 
     /// Combined scan and parse.
-    pub fn next<T: FromBytes>(&mut self, delimiter: u8) -> ProcResult<T> {
+    pub(crate) fn next<T: FromBytes>(&mut self, delimiter: u8) -> ProcResult<T> {
         let bytes = self.scan_until(delimiter)?;
         T::from_bytes(bytes)
     }
@@ -189,9 +189,8 @@ impl<'a> ProcScanner<'a> {
                 }
             }
         }
-        let pos = min_pos.ok_or_else(|| {
-            ProcError::UnexpectedFormat("No delimiter found".into())
-        })?;
+        let pos =
+            min_pos.ok_or_else(|| ProcError::UnexpectedFormat("No delimiter found".into()))?;
 
         let start = self.cursor;
         let end = self.cursor + pos;
@@ -199,7 +198,7 @@ impl<'a> ProcScanner<'a> {
         Ok(&self.slice[start..end])
     }
 
-    pub fn next_any<T: FromBytes>(&mut self, delimiters: &[u8]) -> ProcResult<T> {
+    pub(crate) fn next_any<T: FromBytes>(&mut self, delimiters: &[u8]) -> ProcResult<T> {
         let bytes = self.scan_until_any(delimiters)?;
         T::from_bytes(bytes)
     }
@@ -214,12 +213,15 @@ impl<'a> ProcScanner<'a> {
 
     pub fn scan_until_last(&mut self, delimiter: u8) -> ProcResult<&'a [u8]> {
         let haystack = &self.slice[self.cursor..];
-        let pos = haystack.iter().rposition(|&b| b == delimiter).ok_or_else(|| {
-            ProcError::UnexpectedFormat(format!(
-                "Delimiter '{}' not found from end",
-                delimiter as char
-            ))
-        })?;
+        let pos = haystack
+            .iter()
+            .rposition(|&b| b == delimiter)
+            .ok_or_else(|| {
+                ProcError::UnexpectedFormat(format!(
+                    "Delimiter '{}' not found from end",
+                    delimiter as char
+                ))
+            })?;
 
         let start = self.cursor;
         let end = self.cursor + pos;

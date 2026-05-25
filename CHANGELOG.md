@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.16] (2024-06-18)
 ### Fixed
-* clippy: unused_mut
+* `clippy::unused_mut`
 
 ## [0.3.15] (2023-02-13)
 ### Added
@@ -65,7 +65,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * test status badges into `README.tpl`
 
 ### Fixed
-* clippy: `uninlined_format_args`, `manual_is_ascii_check`
+* `clippy::uninlined_format_args`
+* `clippy::manual_is_ascii_check`
 * bug: `InvalidDigit` on windows, removed `\r` from buffer
 
 ## [0.3.13] (2023-01-10)
@@ -161,7 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.1.1 (2019-04-14)
 ### Changed
-* i revised that based on 'cargo clippy'
+* I revised that based on 'cargo clippy'
 
 ## 0.1.0 (2018-06-14)
 * first commit
