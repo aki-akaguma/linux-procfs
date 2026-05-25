@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [0.4.0] (2026-05-25)
 ### Added
 * Custom error type `ProcError` and result alias `ProcResult` in `src/error.rs`.
 * Fallible update methods (`try_update`, `try_update_with_pid`, etc.) in `util`.
@@ -24,8 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Optimized all parsers to use direct byte-to-number parsing via `FromBytes`, eliminating intermediate `String` and `Cow<str>` allocations.
 * Hardened encapsulation by making internal components (`ProcScanner`, `FileBuffer`, all parser structs, and internal search utilities) `pub(crate)`.
 * Restricted visibility of `scanner` and `parser` internal submodules.
-
-
 
 ## [0.3.17] (2025-09-25)
 ### Added
@@ -167,7 +168,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.1.0 (2018-06-14)
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.17..HEAD
+[Unreleased]: https://github.com/aki-akaguma/linux-procfs/compare/v0.4.0..HEAD
+[0.4.0]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.17..v0.4.0
 [0.3.17]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.16..v0.3.17
 [0.3.16]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.15..v0.3.16
 [0.3.15]: https://github.com/aki-akaguma/linux-procfs/compare/v0.3.14..v0.3.15
