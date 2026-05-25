@@ -352,10 +352,7 @@ impl System {
             capacity: self.config.pid_stat_cap,
             name: "stat",
         };
-        let slice = match pidprocs_stat.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
-            Ok(s) => s,
-            Err(_) => return Ok(None),
-        };
+        let slice = pidprocs_stat.try_update_with_pid(&self.base_path, &mut self.fb, pid)?;
         if !slice.is_empty() {
             Ok(Some(
                 parser::pidstat::PidStatParser::default().parse(slice)?,
@@ -371,10 +368,7 @@ impl System {
             capacity: self.config.pid_statm_cap,
             name: "statm",
         };
-        let slice = match pidprocs_statm.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
-            Ok(s) => s,
-            Err(_) => return Ok(None),
-        };
+        let slice = pidprocs_statm.try_update_with_pid(&self.base_path, &mut self.fb, pid)?;
         if !slice.is_empty() {
             Ok(Some(
                 parser::pidstatm::PidStatmParser::default().parse(slice)?,
@@ -390,10 +384,7 @@ impl System {
             capacity: self.config.pid_status_cap,
             name: "status",
         };
-        let slice = match pidprocs_status.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
-            Ok(s) => s,
-            Err(_) => return Ok(None),
-        };
+        let slice = pidprocs_status.try_update_with_pid(&self.base_path, &mut self.fb, pid)?;
         if !slice.is_empty() {
             Ok(Some(
                 parser::pidstatus::PidStatusParser::default().parse(slice)?,
@@ -409,10 +400,7 @@ impl System {
             capacity: self.config.pid_cmdline_cap,
             name: "cmdline",
         };
-        let slice = match pidprocs_cmdline.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
-            Ok(s) => s,
-            Err(_) => return Ok(None),
-        };
+        let slice = pidprocs_cmdline.try_update_with_pid(&self.base_path, &mut self.fb, pid)?;
         if !slice.is_empty() {
             Ok(Some(
                 parser::pidcmdline::PidCmdlineParser::default().parse(slice)?,
@@ -428,10 +416,7 @@ impl System {
             capacity: self.config.pid_comm_cap,
             name: "comm",
         };
-        let slice = match pidprocs_comm.try_update_with_pid(&self.base_path, &mut self.fb, pid) {
-            Ok(s) => s,
-            Err(_) => return Ok(None),
-        };
+        let slice = pidprocs_comm.try_update_with_pid(&self.base_path, &mut self.fb, pid)?;
         if !slice.is_empty() {
             Ok(Some(
                 parser::pidcmdline::PidCmdlineParser::default().parse(slice)?,
