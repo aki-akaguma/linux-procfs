@@ -17,7 +17,7 @@ impl PidCmdlineParser {
 
         let mut sc = ProcScanner::new(sl);
         let mut args = Vec::new();
-        
+
         while !sc.is_empty() {
             if sc.check(b'\0') {
                 let arg = sc.scan_until(b'\0')?;
@@ -33,7 +33,7 @@ impl PidCmdlineParser {
                 break;
             }
         }
-        
+
         cmdline.cmdline = args.join(" ").trim().to_string();
 
         Ok(cmdline)

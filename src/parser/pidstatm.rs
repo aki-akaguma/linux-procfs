@@ -23,7 +23,7 @@ impl PidStatmParser {
         statm.text = sc.next(b' ')?;
         statm.lib = sc.next(b' ')?;
         statm.data = sc.next(b' ')?;
-        
+
         // Skip the 7th field (dt) if it exists
         if sc.check(b' ') {
             let _ = sc.scan_until(b' ');
