@@ -325,21 +325,37 @@ impl System {
             let pidentry = &mut pids.pidentries[idx];
             pidentry.is_empty = true;
             //
-            pidentry.stat = match self.get_pidentry_stat(pid)? {
-                Some(a) => a,
-                None => continue,
+            pidentry.stat = match self.get_pidentry_stat(pid) {
+                Ok(a) => match a {
+                    Some(b) => b,
+                    None => continue,
+                },
+                Err(e) if e.is_not_found() => continue,
+                Err(e) => return Err(e),
             };
-            pidentry.statm = match self.get_pidentry_statm(pid)? {
-                Some(a) => a,
-                None => continue,
+            pidentry.statm = match self.get_pidentry_statm(pid) {
+                Ok(a) => match a {
+                    Some(b) => b,
+                    None => continue,
+                },
+                Err(e) if e.is_not_found() => continue,
+                Err(e) => return Err(e),
             };
-            pidentry.status = match self.get_pidentry_status(pid)? {
-                Some(a) => a,
-                None => continue,
+            pidentry.status = match self.get_pidentry_status(pid) {
+                Ok(a) => match a {
+                    Some(b) => b,
+                    None => continue,
+                },
+                Err(e) if e.is_not_found() => continue,
+                Err(e) => return Err(e),
             };
-            pidentry.cmdline = match self.get_pidentry_cmdline(pid)? {
-                Some(a) => a,
-                None => continue,
+            pidentry.cmdline = match self.get_pidentry_cmdline(pid) {
+                Ok(a) => match a {
+                    Some(b) => b,
+                    None => continue,
+                },
+                Err(e) if e.is_not_found() => continue,
+                Err(e) => return Err(e),
             };
             pidentry.is_empty = false;
         }

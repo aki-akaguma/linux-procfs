@@ -18,10 +18,7 @@ pub enum ProcError {
 
 impl ProcError {
     pub fn is_not_found(&self) -> bool {
-        match self {
-            Self::NotFound => true,
-            _ => false,
-        }
+        matches!(self, Self::NotFound)
     }
 }
 impl fmt::Display for ProcError {

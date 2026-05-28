@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `ProcError::is_not_found()`
 * `tests/pidentry.rs`
 
+### Fixed
+* bug: not found of `get_pidentries()`
+
 
 ## [0.4.2] (2026-05-26)
 ### Added
